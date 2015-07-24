@@ -7,8 +7,10 @@ World Ocean Database data is encoded by the specification described [here](http:
 To use the `WodProfile` class, open a text file that conforms to the specification defined in the link above, and pass in the resulting file object:
 
 ```
-fid = open("data/quota_subset.dat") 
-profile = WodProfile(fid) # Reads a single profile.
+from wodpy import wod
+
+file = open("example.dat")
+profile = wod.WodProfile(file)
 ```
 
 `profile` now contains an object with many helper functions for extracting useful information:
@@ -23,14 +25,6 @@ profile2.is_last_profile_in_file() # Is this the last profile?
 ### `WodProfile` methods
 
 These methods are intended for end-user use, for decoding useful information from a profile.
-
-#### File Navigation
-
-There may be many profiles in a single text file; these functions help walk around the collection of profiles found in the file.
-
- - `advance_file_position_to_next_profile(fid)`: Advance to the next profile in the current file `fid`.
- - `is_last_profile_in_file(fid)`: Returns true if this is the last profile in the data file `fid`.
- - `return_file_position_to_start_of_profile(fid)`: Return the file `fid` position to the start of the profile.
 
 #### Data Retrieval
 
@@ -64,7 +58,13 @@ These functions decode data from the current profile.
  - `z()`: Returns a numpy masked array of depths. 
  - `z_level_qc(originator=False)`: Returns a numpy masked array of depth quality control flags. Set the originator option if the originator flags are required.
 
+#### File Navigation
 
+There may be many profiles in a single text file; these functions help walk around the collection of profiles found in the file.
+
+ - `advance_file_position_to_next_profile(fid)`: Advance to the next profile in the current file `fid`.
+ - `is_last_profile_in_file(fid)`: Returns true if this is the last profile in the data file `fid`.
+ - `return_file_position_to_start_of_profile(fid)`: Return the file `fid` position to the start of the profile.
 
 
 
