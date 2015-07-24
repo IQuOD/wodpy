@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/BillMills/wodpy.svg?branch=master)](https://travis-ci.org/BillMills/wodpy)
+
 ## Data Unpacking
 
 World Ocean Database data is encoded by the specification described [here](http://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf). This `WodProfile` class reads this format, and returns an object with functions to help extract useful information from it.
