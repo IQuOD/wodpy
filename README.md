@@ -4,6 +4,22 @@
 
 World Ocean Database data is encoded by the specification described [here](http://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf). This `WodProfile` class reads this format, and returns an object with functions to help extract useful information from it.
 
+### How to help
+
+#### Trying things out
+
+There's a toy example of using this package in [this repo](https://github.com/BillMills/woddemo). Head over there and follow the instructions in the README, and let me know if anything funny happens by opening an issue here.
+
+#### Contributing
+
+Contributions to wodpy are very welcome! Please follow these simple guidelines:
+
+ - Please start by opening an issue or empty PR in this repo, so we can talk about your plans.
+ - NO PRs over 500 lines, please!
+ - New code should be packaged in small functions and classes wherever possible; no functions over 50 lines, please.
+ - Write at least one test for every new function you create.
+ - All tests must pass before any PR will be accepted.
+
 ### Usage
 
 To use the `WodProfile` class, open a text file that conforms to the specification defined in the link above, and pass in the resulting file object:
