@@ -22,6 +22,9 @@ Contributions to wodpy are very welcome! Please follow these simple guidelines:
 
 ### Usage
 
+#### Install
+from pip: `sudo pip install wodpy`
+
 To use the `WodProfile` class, open a text file that conforms to the specification defined in the link above, and pass in the resulting file object:
 
 ```
