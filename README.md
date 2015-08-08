@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/BillMills/wodpy.svg?branch=master)](https://travis-ci.org/BillMills/wodpy)
+[![Build Status](https://travis-ci.org/IQuOD/wodpy.svg?branch=master)](https://travis-ci.org/IQuOD/wodpy)
 
 ## Data Unpacking
 
@@ -105,7 +105,7 @@ These functions decode data from the current profile.
  - `time`: in hours on the range [0, 24)
  - `uid`: unique identifier of profile
  - `year`
-
+ 
  Note that `DataFrame` attributes generally do not propagate to new `DataFrames` returned by operating on original `DataFrame`s.
 
 #### File Navigation
