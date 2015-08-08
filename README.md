@@ -27,16 +27,21 @@ To use the `WodProfile` class, open a text file that conforms to the specificati
 ```
 from wodpy import wod
 
-file = open("example.dat")
-profile = wod.WodProfile(file)
+fid = open("example.dat")
+profile = wod.WodProfile(fid)
 ```
 
-`profile` now contains an object with many helper functions for extracting useful information:
+`profile` now contains an object with many helper functions for extracting useful information from the first profile in `file`:
 
 ```
 profile.latitude()  # Return the latitude of the profile.
 profile.z()         # Return the depths of the observations.
-profile2 = WodProfile(fid) # Read the next profile.
+profile.df()        # Return a pandas DataFrame containing all the information for this profile
+```
+
+Further profiles in the file can be read as follows:
+```
+profile2 = wod.WodProfile(fid) # Read the next profile.
 profile2.is_last_profile_in_file() # Is this the last profile?
 ```
 
@@ -103,11 +108,11 @@ These functions decode data from the current profile.
 
 #### File Navigation
 
-There may be many profiles in a single text file; these functions help walk around the collection of profiles found in the file.
+There may be many profiles in a single text file; these methods help walk around the collection of profiles found in the file.
 
  - `advance_file_position_to_next_profile(fid)`: Advance to the next profile in the current file `fid`.
  - `is_last_profile_in_file(fid)`: Returns true if this is the last profile in the data file `fid`.
- - `return_file_position_to_start_of_profile(fid)`: Return the file `fid` position to the start of the profile.
+ - `return_file_position_to_start_of_profile(fid)`: Return the file `fid` position to the start of the current profile.
 
 
 
