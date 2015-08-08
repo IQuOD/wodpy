@@ -9,7 +9,7 @@ before_install:
   - export PATH=/home/travis/miniconda/bin:$PATH
   - conda update --yes conda
 install: 
-  - conda create --yes -n env_name python=$TRAVIS_PYTHON_VERSION pip numpy
-  - pip install pandas
+  - conda create --yes -n env_name python=$TRAVIS_PYTHON_VERSION numpy
   - source activate env_name
+  - conda install pandas
 script: nosetests tests/*.py
