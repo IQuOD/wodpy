@@ -48,7 +48,9 @@ These methods are intended for end-user use, for decoding useful information fro
 
 These functions decode data from the current profile.
 
+##### numpy
 
+**Per-profile data:**
  - `cruise()`: Returns the cruise number.
  - `day()`: Returns the day.
  - `latitude()`: Returns the latitude of the profile.
@@ -57,6 +59,11 @@ These functions decode data from the current profile.
  - `n_levels()`: Returns the number of levels in the profile.
  - `primary_header_keys()`: Returns a list of keys in the primary header.
  - `probe_type()`: Returns the contents of secondary header 29 if it exists, otherwise None.
+ - `time()`: Returns the time.
+ - `uid()`: Returns the unique identifier of the profile.
+ - `year()`: Returns the year. 
+
+**Per-level data:**
  - `s()`: Returns a numpy masked array of salinity.
  - `s_level_qc(originator=False)`: Returns the quality control flag for each salinity level.
  - `s_profile_qc(originator=False)`: Returns the quality control flag for the salinity profile. 
@@ -65,16 +72,34 @@ These functions decode data from the current profile.
  - `t_level_qc(originator=False)`: Returns the quality control flag for each temperature level.
  - `t_profile_qc(originator=False)`: Returns the quality control flag for the temperature profile.
  - `t_qc_mask()`: Returns a boolean array showing which temperature levels failed quality control. If the entire cast was rejected then all levels are set to True.
- - `time()`: Returns the time.
- - `uid()`: Returns the unique identifier of the profile.
- - `var_data(index)`: Returns the data values for a variable given the variable index. 
- - `var_index(code=1, s=False)`: Returns the variable index for a variable. Either the variable code can be specified or s can be set to True to return the salinity index. Otherwise temperature index is returned.
- - `var_level_qc(index, originator=False)`: Returns the quality control codes for the levels in the profile.
- - `var_profile_qc(index, originator=False)`: Returns the quality control flag for entire cast.
- - `var_qc_mask(index)`: Returns a boolean array showing which levels are rejected by the quality control (values are True). A true is only put in the array if there is a rejection (not if there is a missing value).
- - `year()`: Returns the year. 
  - `z()`: Returns a numpy masked array of depths. 
  - `z_level_qc(originator=False)`: Returns a numpy masked array of depth quality control flags. Set the originator option if the originator flags are required.
+
+##### pandas
+
+`profile.df()` returns a pandas `DataFrame`, with per-level information as columns and per-profile information as attributes:
+
+**Columns:**
+ - `depth`: level depths in meters
+ - `depth_qc`: level depth qc flags (0 == all good),
+ - `temperature`: level temperature in Celcius,
+ - `temperature_qc_flag`: level temperature qc flags (0 == all good)
+ - `salinity`: level salinities (units?),
+ - `salinity_qc_flag`: level salinity qc flags (0 == all good)
+
+**Attributes:**
+ - `cruise`: cruise ID number
+ - `day`: of the month on [1, 31]
+ - `latitude`: in degrees
+ - `longitude`: in degrees
+ - `month`: of the year on [1, 12]
+ - `n_levels`: number of levels in profile (ie number of rows in dataframe)
+ - `probe_type`: The contents of secondary header 29 if it exists, otherwise None.
+ - `time`: in hours on the range [0, 24)
+ - `uid`: unique identifier of profile
+ - `year`
+
+ Note that `DataFrame` attributes generally do not propagate to new `DataFrames` returned by operating on original `DataFrame`s.
 
 #### File Navigation
 

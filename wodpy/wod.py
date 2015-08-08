@@ -1,6 +1,7 @@
 import copy
 import numpy as np
 import os
+import pandas as pd
 
 class WodProfile(object):
     """ Main class to parse a WOD ASCII file
@@ -520,7 +521,34 @@ class WodProfile(object):
     def s_profile_qc(self, originator=False):
         """ Returns the quality control flag for the salinity profile. """
         index = self.var_index(s=True)
-        return self.var_profile_qc(index, originator=originator)    
+        return self.var_profile_qc(index, originator=originator)
 
+    def df(self):
+        """ Returns level data as a pandas data frame. """
 
+        # populate dataframe with level data
+        columns = {
+            "depth": self.z(),
+            "depth_qc": self.z_level_qc(),
+            "temperature": self.t(),
+            "temperature_qc_flag": self.t_level_qc(),
+            "salinity": self.s(),
+            "salinity_qc_flag": self.s_level_qc()
+        }
+
+        df = pd.DataFrame(columns)
+
+        # record profile data as attributes on the dataframe object
+        df.latitude = self.latitude()
+        df.longitude = self.longitude()
+        df.uid = self.uid()
+        df.n_levels = self.n_levels()
+        df.year = self.year()
+        df.month = self.month()
+        df.day = self.day()
+        df.time = self.time()
+        df.cruise = self.cruise()
+        df.probe_type = self.probe_type()
+
+        return df
 
