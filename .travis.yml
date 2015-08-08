@@ -11,5 +11,5 @@ before_install:
 install: 
   - conda create --yes -n env_name python=$TRAVIS_PYTHON_VERSION numpy
   - source activate env_name
-  - conda install pandas
+  - conda install --yes pandas
 script: nosetests tests/*.py
