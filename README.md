@@ -45,6 +45,8 @@ profile2 = wod.WodProfile(fid) # Read the next profile.
 profile2.is_last_profile_in_file() # Is this the last profile?
 ```
 
+Complete method lists and definitions are as follows.
+
 ### `WodProfile` methods
 
 These methods are intended for end-user use, for decoding useful information from a profile.
