@@ -524,7 +524,9 @@ class WodProfile(object):
         return self.var_profile_qc(index, originator=originator)
 
     def df(self):
-        """ Returns level data as a pandas data frame. """
+        """ Returns level data as a pandas data frame. 
+            Profile metadata recorded as custom attributes on the dataframe.
+        """
 
         # populate dataframe with level data
         columns = {
@@ -551,4 +553,46 @@ class WodProfile(object):
         df.probe_type = self.probe_type()
 
         return df
+
+
+    def npdict(self):
+        """ Returns a dict with keys == function names and 
+            values == returns of those functions with default parameters.
+        """
+
+        d = {}
+
+        # per profile
+        d['cruise'] = self.cruise()
+        d['day'] = self.day()
+        d['latitude'] = self.latitude()
+        d['longitude'] = self.longitude()
+        d['month'] = self.month()
+        d['n_levels'] = self.n_levels()
+        d['primary_header_keys'] = self.primary_header_keys()
+        d['probe_type'] = self.probe_type()
+        d['time'] = self.time()
+        d['uid'] = self.uid()
+        d['year'] = self.year()
+        # per level
+        d['s'] = self.s()
+        d['s_level_qc'] = self.s_level_qc()
+        d['s_profile_qc'] = self.s_profile_qc()
+        d['s_qc_mask'] = self.s_qc_mask()
+        d['t'] = self.t()
+        d['t_level_qc'] = self.t_level_qc()
+        d['t_profile_qc'] = self.t_profile_qc()
+        d['t_qc_mask'] = self.t_qc_mask()
+        d['z'] = self.z()
+        d['z_level_qc'] = self.z_level_qc()
+
+        return d
+
+
+
+
+
+
+
+
 

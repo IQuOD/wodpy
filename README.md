@@ -82,6 +82,9 @@ These functions decode data from the current profile.
  - `z()`: Returns a numpy masked array of depths. 
  - `z_level_qc(originator=False)`: Returns a numpy masked array of depth quality control flags. Set the originator option if the originator flags are required.
 
+Constructing the per-level `ndarrays` should not be done more than once per profile; for convenience, we provide the following wrapper to pull all this information out at once:
+ - `npdict()`: Returns a `dict` with keys identical to the function names above, and corresponding values equal to the return values of those functions when run with default parameter values.
+
 ##### pandas
 
 `profile.df()` returns a pandas `DataFrame`, with per-level information as columns and per-profile information as attributes:
