@@ -588,6 +588,28 @@ class WodProfile(object):
 
         return d
 
+    def header(self):
+        """ Returns a data series containing primary header of the current profile """
+
+        data = {}
+        data['latitude'] = self.latitude()
+        data['longitude'] = self.longitude()
+        data['uid'] = self.uid()
+        data['n_levels'] = self.n_levels()
+        data['year'] = self.year()
+        data['month'] = self.month()
+        data['day'] = self.day()
+        data['time'] = self.time()
+        data['cruise'] = self.cruise()
+        data['probe_type'] = self.probe_type()
+        
+        header = pd.Series(data)
+
+        return header
+
+
+
+
 
 
 

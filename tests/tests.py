@@ -1,4 +1,5 @@
 from wodpy import wod
+import numpy
 
 class TestClass():
     def setUp(self):
@@ -8,6 +9,9 @@ class TestClass():
         file = open("tests/testData/example.dat")
 
         self.demoProfile = wod.WodProfile(file)
+        self.dataframe = self.demoProfile.df()
+        self.dictionary = self.demoProfile.npdict()
+        self.head = self.demoProfile.header()
 
         return
 
@@ -17,7 +21,7 @@ class TestClass():
     # ===================================================================
     # check the example from pp 137 of
     # http://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf
-    # is extracted correctly.
+    # is extracted correctly by base functions.
     # data is in `example.dat`
     
     def test_latitude(self):
@@ -26,7 +30,14 @@ class TestClass():
         '''
 
         latitude = self.demoProfile.latitude()
+        df_latitude = self.dataframe.latitude
+        np_latitude = self.dictionary['latitude']
+        header_latitude = self.head.latitude
         assert latitude == 61.930, 'latitude should have been 61.930, instead read %f' % latitude
+        assert df_latitude == 61.930, 'dataframe latitude should have been 61.930, instead read %f' % df_latitude
+        assert np_latitude == 61.930, 'np dict latitude should have been 61.930, instead read %f' % np_latitude
+        assert header_latitude == 61.930, 'header latitude should have been 61.930, instead read %f' % header_latitude
+
 
     def test_longitude(self):
         '''
@@ -34,7 +45,13 @@ class TestClass():
         '''
 
         longitude = self.demoProfile.longitude()
-        assert longitude == -172.270, ' should have been , instead read %f' % longitude
+        df_longitude = self.dataframe.longitude
+        np_longitude = self.dictionary['longitude']
+        header_longitude = self.head.longitude
+        assert longitude == -172.270, 'longitude should have been -172.270, instead read %f' % longitude
+        assert df_longitude == -172.270, 'dataframe longitude should have been -172.270, instead read %f' % df_longitude
+        assert np_longitude == -172.270, 'np dict longitude should have been -172.270, instead read %f' % np_longitude
+        assert header_longitude == -172.270, 'header longitude should have been -172.270, instead read %f' % header_longitude
 
     def test_uid(self):
         '''
@@ -42,7 +59,15 @@ class TestClass():
         '''
 
         uid = self.demoProfile.uid()
-        assert uid == 67064, ' should have been , instead read %f' % uid
+        df_uid = self.dataframe.uid
+        np_uid = self.dictionary['uid']
+        header_uid = self.head.uid
+        assert uid == 67064, 'uid should have been 67064, instead read %f' % uid
+        assert df_uid == 67064, 'dataframe uid should have been 67064, instead read %f' % df_uid
+        assert np_uid == 67064, 'np dict uid should have been 67064, instead read %f' % np_uid
+        assert header_uid == 67064, 'header uid should have been 67064, instead read %f' % header_uid
+
+
 
     def test_n_levels(self):
         '''
@@ -50,7 +75,13 @@ class TestClass():
         '''
 
         levels = self.demoProfile.n_levels()
-        assert levels == 4, ' should have been , instead read %f' % levels
+        df_levels = self.dataframe.n_levels
+        np_levels = self.dictionary['n_levels']
+        header_n_levels = self.head.n_levels
+        assert levels == 4, 'levels should have been 4, instead read %f' % levels
+        assert df_levels == 4, 'dataframe levels should have been 4, instead read %f' % df_levels
+        assert np_levels == 4, 'np dict levels should have been 4, instead read %f' % np_levels
+        assert header_n_levels == 4, 'header levels should have been 4, instead read %f' % header_levels
 
     def test_year(self):
         '''
@@ -58,7 +89,15 @@ class TestClass():
         '''
 
         year = self.demoProfile.year()
-        assert year == 1934, ' should have been , instead read %f' % year
+        df_year = self.dataframe.year
+        np_year = self.dictionary['year']
+        header_year = self.head.year
+        assert year == 1934, 'year should have been 1934, instead read %f' % year
+        assert df_year == 1934, 'dataframe year should have been 1934, instead read %f' % df_year
+        assert np_year == 1934, 'np dict year should have been 1934, instead read %f' % np_year
+        assert header_year == 1934, 'header year should have been 1934, instead read %f' % header_year
+
+
 
     def test_month(self):
         '''
@@ -66,7 +105,14 @@ class TestClass():
         '''
 
         month = self.demoProfile.month() 
-        assert month == 8, ' should have been , instead read %f' % month
+        df_month = self.dataframe.month
+        np_month = self.dictionary['month']
+        header_month = self.head.month
+        assert month == 8, 'month should have been 8, instead read %f' % month
+        assert df_month == 8, 'dataframe month should have been 8, instead read %f' % df_month
+        assert np_month == 8, 'np dict month should have been 8, instead read %f' % np_month
+        assert header_month == 8, 'header month should have been 8, instead read %f' % header_month
+
 
     def test_day(self):
         '''
@@ -74,7 +120,13 @@ class TestClass():
         '''
 
         day = self.demoProfile.day()
-        assert day == 7, ' should have been , instead read %f' % day
+        df_day = self.dataframe.day
+        np_day = self.dictionary['day']
+        header_day = self.head.day
+        assert day == 7, 'day should have been 7, instead read %f' % day
+        assert df_day == 7, 'dataframe day should have been 7, instead read %f' % df_day
+        assert np_day == 7, 'np dict day should have been 7, instead read %f' % np_day
+        assert header_day == 7, 'header day should have been 7, instead read %f' % header_day
 
     def test_time(self):
         ''' 
@@ -82,7 +134,14 @@ class TestClass():
         '''
 
         time = self.demoProfile.time()
-        assert time == 10.37, ' should have been , instead read %f' % time
+        df_time = self.dataframe.time
+        np_time = self.dictionary['time']
+        header_time = self.head.time
+        assert time == 10.37, 'time should have been 10.37, instead read %f' % time
+        assert df_time == 10.37, 'dataframe time should have been 10.37, instead read %f' % df_time
+        assert np_time == 10.37, 'np dict time should have been 10.37, instead read %f' % np_time
+        assert header_time == 10.37, 'header time should have been 10.37, instead read %f' % header_time
+
 
     def test_probe_type(self):
         '''
@@ -90,4 +149,54 @@ class TestClass():
         '''
 
         probe = self.demoProfile.probe_type() 
-        assert probe == 7, ' should have been , instead read %f' % probe
+        df_probe = self.dataframe.probe_type
+        np_probe = self.dictionary['probe_type']
+        header_probe = self.head.probe_type
+        assert probe == 7, 'probe should have been , instead read %f' % probe
+        assert df_probe == 7, 'dataframe probe should have been 7, instead read %f' % df_probe
+        assert np_probe == 7, 'np dict probe should have been 7, instead read %f' % np_probe
+        assert header_probe == 7, 'header probe should have been 7, instead read %f' % header_probe
+
+
+    def test_depth(self):
+        '''
+        check depths == [0.0, 10.0, 25.0, 50.0]
+        '''
+
+        truth = [0.0, 10.0, 25.0, 50.0]
+        z = self.demoProfile.z()
+        df_z = self.dataframe['depth']
+        np_z = self.dictionary['z']
+        assert numpy.array_equal(z, truth), 'depths should have been [0, 10, 25, 50], instead read %s' % z.__str__()
+        assert numpy.array_equal(df_z, truth), 'dataframe depths should have been [0, 10, 25, 50], instead read %s' % df_z.tolist().__str__()
+        assert numpy.array_equal(np_z, truth), 'numpy dict depths should have been [0, 10, 25, 50], instead read %s' % np_z.__str__()
+
+    def test_temperature(self):
+        '''
+        check temperatures == [8.960, 8.950, 0.900, -1.230]
+        '''
+
+        truth = [8.960, 8.950, 0.900, -1.230]
+        t = self.demoProfile.t()
+        df_t = self.dataframe['temperature']
+        np_t = self.dictionary['t']
+        assert numpy.array_equal(t, truth), 'temperatures should have been [8.96, 8.95, 0.9, -1.23], instead read %s' % t.__str__()
+        assert numpy.array_equal(df_t, truth), 'dataframe temperatures should have been [8.96, 8.95, 0.9, -1.23], instead read \n%s' % df_t.__str__()
+        assert numpy.array_equal(np_t, truth), 'numpy dict temperatures should have been [8.96, 8.95, 0.9, -1.23], instead read %s' % np_t.__str__()
+
+    def test_salinity(self):
+        '''
+        check salinities == [30.900, 30.900, 31.910, 32.410]
+        '''
+        
+        truth = [30.900, 30.900, 31.910, 32.410]
+        s = self.demoProfile.s()
+        df_s = self.dataframe['salinity']
+        np_s = self.dictionary['s']
+        assert numpy.array_equal(s, truth), 'salinities should have been [30.9, 30.9, 31.91, 32.41], instead read %s' % s.__str__()
+        assert numpy.array_equal(df_s, truth), 'dataframe salinities should have been [30.9, 30.9, 31.91, 32.41], instead read \n%s' % df_s.__str__()
+        assert numpy.array_equal(np_s, truth), 'numpy dict salinities should have been [30.9, 30.9, 31.91, 32.41], instead read %s' % np_s.__str__()
+
+
+
+
