@@ -15,7 +15,7 @@ There's a toy example of using this package in [this repo](https://github.com/Bi
 Contributions to wodpy are very welcome! Please follow these simple guidelines:
 
  - Please start by opening an issue or empty PR in this repo, so we can talk about your plans.
- - NO PRs over 500 lines, please!
+ - No PRs over 500 lines, please. (Why? See figure 1 [here](https://smartbear.com/SmartBear/media/pdfs/11_Best_Practices_for_Peer_Code_Review.pdf).)
  - New code should be packaged in small functions and classes wherever possible; no functions over 50 lines, please.
  - Write at least one test for every new function you create.
  - All tests must pass before any PR will be accepted.
