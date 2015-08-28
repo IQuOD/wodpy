@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/IQuOD/wodpy.svg?branch=v0.2.0)](https://travis-ci.org/IQuOD/wodpy)
+[![Build Status](https://travis-ci.org/IQuOD/wodpy.svg?branch=master)](https://travis-ci.org/IQuOD/wodpy)
+
 
 ## Data Unpacking
 
@@ -21,6 +22,9 @@ Contributions to wodpy are very welcome! Please follow these simple guidelines:
  - All tests must pass before any PR will be accepted.
 
 ### Usage
+
+#### Install
+from pip: `sudo pip install wodpy`
 
 To use the `WodProfile` class, open a text file that conforms to the specification defined in the link above, and pass in the resulting file object:
 
