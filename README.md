@@ -116,7 +116,7 @@ Constructing the per-level `ndarrays` should not be done more than once per prof
  Note that `DataFrame` attributes generally do not propagate to new `DataFrames` returned by operating on original `DataFrame`s.
 
 **Headers Only**
- - `headers()`: Returns a pandas `Series` with only the header information for the profile, keyed as the custom attributes on the full data frame described above.
+ - `header()`: Returns a pandas `Series` with only the header information for the profile, keyed as the custom attributes on the full data frame described above.
 
 #### File Navigation
 
