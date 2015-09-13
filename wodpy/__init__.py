@@ -1,1 +1,1 @@
-import wod
+from . import wod
