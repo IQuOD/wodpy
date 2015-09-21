@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/IQuOD/wodpy.svg?branch=master)](https://travis-ci.org/IQuOD/wodpy)
 
+**Please cite v.1.0 of this work via this DOI:**
+[![DOI](https://zenodo.org/badge/3877/IQuOD/wodpy.svg)](https://zenodo.org/badge/latestdoi/3877/IQuOD/wodpy)
 
 ## Data Unpacking
 

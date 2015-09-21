@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='wodpy',
-    version='0.3.0',
+    version='1.0',
     packages=find_packages(exclude=['tests*']),
     license='MIT',
     description='A parser for the WOD data format, described in http://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf',
