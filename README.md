@@ -1,7 +1,13 @@
 [![Build Status](https://travis-ci.org/IQuOD/wodpy.svg?branch=master)](https://travis-ci.org/IQuOD/wodpy)
 
-**Please cite v.1.0 of this work via this DOI:**
+**Latest Release: 1.0**
 [![DOI](https://zenodo.org/badge/3877/IQuOD/wodpy.svg)](https://zenodo.org/badge/latestdoi/3877/IQuOD/wodpy)
+
+Release History:
+
+version | DOI
+--------|----
+1.0     | 10.5281/zenodo.31213
 
 ## Data Unpacking
 
