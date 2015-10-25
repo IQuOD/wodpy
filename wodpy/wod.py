@@ -523,6 +523,31 @@ class WodProfile(object):
         index = self.var_index(s=True)
         return self.var_profile_qc(index, originator=originator)
 
+    def oxygen(self):
+        """ Returns a numpy masked array of oxygen content (mL / L) """
+        index = self.var_index(3)
+        return self.var_data(index)
+
+    def phosphate(self):
+        """ Returns a numpy masked array of phosphate content (uM / L) """
+        index = self.var_index(4)
+        return self.var_data(index)
+
+    def silicate(self):
+        """ Returns a numpy masked array of silicate content (uM / L) """
+        index = self.var_index(6)
+        return self.var_data(index)
+
+    def pH(self):
+        """ Returns a numpy masked array of pH """
+        index = self.var_index(9)
+        return self.var_data(index)
+
+    def p(self):
+        """ Returns a numpy masked array of pressures. """
+        index = self.var_index(25)
+        return self.var_data(index)
+
     def df(self):
         """ Returns level data as a pandas data frame. 
             Profile metadata recorded as custom attributes on the dataframe.
@@ -535,7 +560,12 @@ class WodProfile(object):
             "temperature": self.t(),
             "temperature_qc_flag": self.t_level_qc(),
             "salinity": self.s(),
-            "salinity_qc_flag": self.s_level_qc()
+            "salinity_qc_flag": self.s_level_qc(),
+            "oxygen": self.oxygen(),
+            "phosphate": self.phosphate(),
+            "silicate": self.silicate(),
+            "pH": self.pH(),
+            "pressure": self.p()
         }
 
         df = pd.DataFrame(columns)
@@ -585,6 +615,11 @@ class WodProfile(object):
         d['t_qc_mask'] = self.t_qc_mask()
         d['z'] = self.z()
         d['z_level_qc'] = self.z_level_qc()
+        d['oxygen'] = self.oxygen()
+        d['phosphate'] = self.phosphate()
+        d['silicate'] = self.silicate()
+        d['pH'] = self.pH()
+        d['p'] = self.p()
 
         return d
 

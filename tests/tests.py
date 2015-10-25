@@ -12,7 +12,6 @@ class TestClass():
         self.dataframe = self.demoProfile.df()
         self.dictionary = self.demoProfile.npdict()
         self.head = self.demoProfile.header()
-
         return
 
     def tearDown(self):
@@ -197,6 +196,62 @@ class TestClass():
         assert numpy.array_equal(df_s, truth), 'dataframe salinities should have been [30.9, 30.9, 31.91, 32.41], instead read \n%s' % df_s.__str__()
         assert numpy.array_equal(np_s, truth), 'numpy dict salinities should have been [30.9, 30.9, 31.91, 32.41], instead read %s' % np_s.__str__()
 
+
+    def test_oxygen(self):
+        '''
+        check oxygen levels = [6.750, 6.700, 8.620, 7.280]
+        '''
+
+        truth = [6.750, 6.700, 8.620, 7.280]
+        o2 = self.demoProfile.oxygen()
+        df_o2 = self.dataframe['oxygen']
+        np_o2 = self.dictionary['oxygen']
+
+        assert numpy.array_equal(o2, truth), 'oxygen levels should have been [6.750, 6.700, 8.620, 7.280], instead read %s' % o2.__str__()
+        assert numpy.array_equal(df_o2, truth), 'dataframe oxygen levels should have been [6.750, 6.700, 8.620, 7.280], instead read \n%s' % df_o2.__str__()
+        assert numpy.array_equal(np_o2, truth), 'numpy dict oxygen levels should have been [6.750, 6.700, 8.620, 7.280], instead read %s' % np_o2.__str__()
+
+    def test_phosphate(self):
+        '''
+        check phosphate levels = [0.650, 0.710, 0.900, 1.170]
+        '''
+
+        truth = [0.650, 0.710, 0.900, 1.170]
+        phos = self.demoProfile.phosphate()
+        df_phos = self.dataframe['phosphate']
+        np_phos = self.dictionary['phosphate']
+
+        assert numpy.array_equal(phos, truth), 'phosphate levels should have been [0.650, 0.710, 0.900, 1.170], instead read %s' % phos.__str__()
+        assert numpy.array_equal(df_phos, truth), 'dataframe phosphate levels should have been [0.650, 0.710, 0.900, 1.170], instead read \n%s' % df_phos.__str__()
+        assert numpy.array_equal(np_phos, truth), 'numpy dict phosphate levels should have been [0.650, 0.710, 0.900, 1.170], instead read %s' % np_phos.__str__()
+
+    def test_silicate(self):
+        '''
+        check silicate levels = [20.500, 12.300, 15.400, 25.600]
+        '''
+
+        truth = [20.500, 12.300, 15.400, 25.600]
+        sili = self.demoProfile.silicate()
+        df_sili = self.dataframe['silicate']
+        np_sili = self.dictionary['silicate']
+
+        assert numpy.array_equal(sili, truth), 'silicate levels should have been [20.500, 12.300, 15.400, 25.600], instead read %s' % sili.__str__()
+        assert numpy.array_equal(df_sili, truth), 'dataframe silicate levels should have been [20.500, 12.300, 15.400, 25.600], instead read \n%s' % df_sili.__str__()
+        assert numpy.array_equal(np_sili, truth), 'numpy dict silicate levels should have been [20.500, 12.300, 15.400, 25.600], instead read %s' % np_sili.__str__()
+
+    def test_pH(self):
+        '''
+        check pH levels = [8.100, 8.100, 8.100, 8.050]
+        '''
+
+        truth = [8.100, 8.100, 8.100, 8.050]
+        pH = self.demoProfile.pH()
+        df_pH = self.dataframe['pH']
+        np_pH = self.dictionary['pH']
+
+        assert numpy.array_equal(pH, truth), 'pH levels should have been [8.100, 8.100, 8.100, 8.050], instead read %s' % pH.__str__()
+        assert numpy.array_equal(df_pH, truth), 'dataframe pH levels should have been , instead read [8.100, 8.100, 8.100, 8.050]\n%s' % df_pH.__str__()
+        assert numpy.array_equal(np_pH, truth), 'numpy dict pH levels should have been [8.100, 8.100, 8.100, 8.050], instead read %s' % np_pH.__str__()
 
 
 
