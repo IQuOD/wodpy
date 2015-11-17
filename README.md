@@ -17,7 +17,7 @@ World Ocean Database data is encoded by the specification described [here](http:
 
 #### Trying things out
 
-There's a toy example of using this package in [this repo](https://github.com/BillMills/woddemo). Head over there and follow the instructions in the README, and let me know if anything funny happens by opening an issue here.
+Please try unpacking your own WOD data using wodpy, and let us know how it goes in the issues. Any problems (not just bugs, but anything confusing or unintuitive), just let us know. Also, if there are more features you'd like to see (like more parts of the profile unpacked), ask away - community requests are high priority for new features.
 
 #### Contributing
 
