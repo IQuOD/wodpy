@@ -56,8 +56,7 @@ class Wod4CoTeDe(object):
         self.attributes['probe_code'] = int(self.p.probe_type())
         self.attributes['probe_type'] = probe_type_table[self.p.probe_type()]
         self.attributes['n_levels'] = self.p.n_levels()
-
-        self.get_datetime()
+        self.attributes['datetime'] = self.p.datetime()
 
         self.data = {}
         # FIXME: pressure is 'almost' equal to depth.
@@ -77,26 +76,3 @@ class Wod4CoTeDe(object):
 
     def __getitem__(self, item):
         return self.data[item]
-
-    def get_datetime(self):
-        """ Extract datetime from the WOD profile
-
-            This was copied from AutoQC.DummyCNV()
-        """
-        year  = self.p.year()
-        month = self.p.month()
-        day   = self.p.day()
-        if day == 0: day = 15
-        time  = self.p.time()
-        if time is None or time < 0 or time >= 24:
-            hours   = 0
-            minutes = 0
-            seconds = 0
-        else:
-            hours = int(time)
-            minutesf = (time - hours) * 60
-            minutes  = int(minutesf)
-            seconds  = int((minutesf - minutes) * 60)
-
-        self.attributes['datetime'] = datetime(year, month,
-                day, hours, minutes, seconds)

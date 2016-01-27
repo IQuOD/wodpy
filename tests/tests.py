@@ -1,3 +1,4 @@
+from datetime import datetime
 from wodpy import wod
 import numpy
 
@@ -140,6 +141,17 @@ class TestClass():
         assert df_time == 10.37, 'dataframe time should have been 10.37, instead read %f' % df_time
         assert np_time == 10.37, 'np dict time should have been 10.37, instead read %f' % np_time
         assert header_time == 10.37, 'header time should have been 10.37, instead read %f' % header_time
+
+
+    def test_datetime(self):
+        '''
+        check datetime 1934-8-7 10:22:12
+        '''
+
+        d = self.demoProfile.datetime()
+        assert d == datetime(1934, 8, 7, 10, 22, 12), \
+                'time should have been 1934-08-07 10:22:12, instead read %s' \
+                % d
 
 
     def test_probe_type(self):
