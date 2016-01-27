@@ -138,6 +138,28 @@ Constructing the per-level `ndarrays` should not be done more than once per prof
 **Headers Only**
  - `header()`: Returns a pandas `Series` with only the header information for the profile, keyed as the custom attributes on the full data frame described above.
 
+##### CoTeDe
+
+CoTeDe is a package to quality control hydrographic data, and t
+
+The class `Wod4CoTeDe` provides a WOD profile in the format required by CoTeDe, which is a package to quality control hydrographic data. One could use it like:
+
+>>> from wodpy.extra import Wod4CoTeDe
+
+>>> fid = open('example.dat')
+>>> p = WodProfile(fid)
+>>> profile = Wod4CoTeDe(p)
+
+or
+>>> fid = open('example.data')
+>>> profile = Wod4CoTeDe(fid)
+
+To quality control that profile with the EuroGOOS standard:
+>>> from cotede.qc import ProfileQC
+>>> pqc = ProfileQC(profile, 'eurogoos')
+
+All the information about the profile can be obtained at: pqc.attributes, pqc.data and pqc.flags. For more information, check CoTeDe's manual.
+
 #### File Navigation
 
 There may be many profiles in a single text file; these methods help walk around the collection of profiles found in the file.
