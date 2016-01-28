@@ -395,9 +395,7 @@ class WodProfile(object):
             day = 15
         time  = self.primary_header['Time']
         if time is None or time < 0 or time >= 24:
-            hours = 0
-            minutes = 0
-            seconds = 0
+            time = 0
 
         d = datetime(year, month, day) + timedelta(hours=time)
         return d
