@@ -2,7 +2,7 @@ import copy
 import numpy as np
 import os
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class WodProfile(object):
     """ Main class to parse a WOD ASCII file
@@ -398,13 +398,9 @@ class WodProfile(object):
             hours = 0
             minutes = 0
             seconds = 0
-        else:
-            hours = int(time)
-            minutesf = (time - hours) * 60
-            minutes  = int(minutesf)
-            seconds  = int(round((minutesf - minutes) * 60))
 
-        return datetime(year, month, day, hours, minutes, seconds)
+        d = datetime(year, month, day) + timedelta(hours=time)
+        return d
 
     def cruise(self):
         """ return the cruise number """
