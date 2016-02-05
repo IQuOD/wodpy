@@ -1,14 +1,12 @@
 [![Build Status](https://travis-ci.org/IQuOD/wodpy.svg?branch=master)](https://travis-ci.org/IQuOD/wodpy)
 
-**Latest Release: 1.1.0**
-[![DOI](https://zenodo.org/badge/3877/IQuOD/wodpy.svg)](https://zenodo.org/badge/latestdoi/3877/IQuOD/wodpy)
 
 Release History:
 
 version | DOI
 --------|----
-1.1.0   | 10.5281/zenodo.32632
-1.0     | 10.5281/zenodo.31213
+1.1.0   | <a href="http://dx.doi.org/10.5281/zenodo.32632"><img src="https://zenodo.org/badge/doi/10.5281/zenodo.32632.svg" alt="10.5281/zenodo.32632"></a>
+1.0     | <a href="http://dx.doi.org/10.5281/zenodo.31213"><img src="https://zenodo.org/badge/doi/10.5281/zenodo.31213.svg" alt="10.5281/zenodo.31213"></a>
 
 ## Data Unpacking
 
