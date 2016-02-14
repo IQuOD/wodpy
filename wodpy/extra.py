@@ -71,10 +71,11 @@ class Wod4CoTeDe(object):
         self.data['TEMP'] = self.p.t()
         self.data['TEMP_QC'] = self.p.t_qc_mask()
         self.data['PSAL'] = self.p.s()
-        self.data['oxygen'] = self.p.oxygen()
-        self.data['silicate'] = self.p.silicate()
-        self.data['phosphate'] = self.p.phosphate()
-        self.data['pH'] = self.p.pH()
+        for v in ['oxygen', 'silicate', 'phosphate', 'pH']:
+            try:
+                exec("self.data['%s'] = self.p.%s()" % (v, v))
+            except:
+                pass
 
     def keys(self):
         return self.data.keys()
