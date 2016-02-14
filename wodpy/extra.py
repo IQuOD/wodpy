@@ -53,8 +53,13 @@ class Wod4CoTeDe(object):
         self.attributes['LATITUDE'] = self.p.latitude()
         self.attributes['LONGITUDE'] = self.p.longitude()
         self.attributes['uid'] = self.p.uid()
-        self.attributes['probe_code'] = int(self.p.probe_type())
-        self.attributes['probe_type'] = probe_type_table[self.p.probe_type()]
+        try:
+            self.attributes['probe_code'] = int(self.p.probe_type())
+            self.attributes['probe_type'] = \
+                    probe_type_table[self.p.probe_type()]
+        except:
+            self.attributes['probe_code'] = None
+            self.attributes['probe_type'] = None
         self.attributes['n_levels'] = self.p.n_levels()
         self.attributes['datetime'] = self.p.datetime()
 
