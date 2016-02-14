@@ -44,10 +44,10 @@ class Wod4CoTeDe(object):
             >>> profile = Wod4CoTeDe(fid)
 
         """
-        if type(profile) == WodProfile:
-            self.p = profile
-        else:
+        try:
             self.p = WodProfile(profile)
+        except:
+            self.p = profile
 
         self.attributes = {}
         self.attributes['LATITUDE'] = self.p.latitude()
