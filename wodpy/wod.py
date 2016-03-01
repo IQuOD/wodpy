@@ -31,6 +31,9 @@ class WodProfile(object):
         self.file_name = fid.name
         self.file_position = fid.tell()
         
+        # Check we are not at the end of the file.
+        assert self.file_position < os.fstat(fid.fileno()).st_size, 'At end of data file.'
+        
         # Record if CR+LF characters are being used at the end of lines.
         fid.seek(self.file_position + 80)
         char = fid.read(1)
