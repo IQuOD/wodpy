@@ -158,14 +158,6 @@ To quality control that profile with the EuroGOOS standard:
 
 All the information about the profile can be obtained at: pqc.attributes, pqc.data and pqc.flags. For more information, check CoTeDe's manual.
 
-#### File Navigation
-
-There may be many profiles in a single text file; these methods help walk around the collection of profiles found in the file.
-
- - `advance_file_position_to_next_profile(fid)`: Advance to the next profile in the current file `fid`.
- - `is_last_profile_in_file(fid)`: Returns true if this is the last profile in the data file `fid`.
- - `return_file_position_to_start_of_profile(fid)`: Return the file `fid` position to the start of the current profile.
-
 
 
  
