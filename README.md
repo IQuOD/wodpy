@@ -54,7 +54,7 @@ profile.df()        # Return a pandas DataFrame containing all the information f
 Further profiles in the file can be read as follows:
 ```
 profile2 = wod.WodProfile(fid) # Read the next profile.
-profile2.is_last_profile_in_file() # Is this the last profile?
+profile2.is_last_profile_in_file(fid) # Is this the last profile?
 ```
 
 Complete method lists and definitions are as follows.
