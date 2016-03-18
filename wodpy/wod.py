@@ -396,9 +396,12 @@ class WodProfile(object):
         if time is None or time < 0 or time >= 24:
             time = 0
 
-        d = datetime(self.year(), self.month(), self.day()) + \
-                timedelta(hours=time)
-        return d
+        try:
+            d = datetime(self.year(), self.month(), self.day()) + \
+                    timedelta(hours=time)
+            return d
+        except:
+            return
 
     def cruise(self):
         """ return the cruise number """
