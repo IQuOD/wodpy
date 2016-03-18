@@ -380,7 +380,11 @@ class WodProfile(object):
 
     def day(self):
         """ Returns the day. """
-        return self.primary_header['Day']
+        day = self.primary_header['Day']
+        if day == 0:
+            return
+        else:
+            return day
 
     def time(self):
         """ Returns the time. """
