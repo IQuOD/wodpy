@@ -392,16 +392,12 @@ class WodProfile(object):
 
     def datetime(self):
         """ Returns the date and time as a datetime object. """
-        year = self.primary_header['Year']
-        month = self.primary_header['Month']
-        day = self.primary_header['Day']
-        if day == 0:
-            day = 15
-        time  = self.primary_header['Time']
+        time  = self.time()
         if time is None or time < 0 or time >= 24:
             time = 0
 
-        d = datetime(year, month, day) + timedelta(hours=time)
+        d = datetime(self.year(), self.month(), self.day()) + \
+                timedelta(hours=time)
         return d
 
     def cruise(self):
