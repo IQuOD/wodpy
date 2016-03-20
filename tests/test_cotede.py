@@ -57,13 +57,13 @@ class TestClass():
 
     def test_datetime(self):
         ''' 
-        check datetime == 1934-08-07 10:22:11
+        check datetime == 1934-08-07 10:22:12
         '''
 
-        truth = datetime(1934, 8, 7, 10, 22, 11)
+        truth = datetime(1934, 8, 7, 10, 22, 12)
         time = self.demoProfile.attributes['datetime']
         assert time == truth, \
-                'time should have been 1934-08-07 10:22:11, instead read %s' \
+                'time should have been 1934-08-07 10:22:12, instead read %s' \
                 % time
 
 
