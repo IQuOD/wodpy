@@ -1,7 +1,7 @@
 
 from datetime import datetime
 
-from wod import WodProfile
+from .wod import WodProfile
 
 probe_type_table = {
         0: 'unkown',
