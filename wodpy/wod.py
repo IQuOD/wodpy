@@ -409,7 +409,30 @@ class WodProfile(object):
     def cruise(self):
         """ return the cruise number """
         return self.primary_header['Cruise number']
-        
+
+    def PIs(self):
+        """ Return PI object, or None if not avilable"""
+
+        # find the PI object, if it exits
+        PIs = None
+        for obj in self.character_data_and_principal_investigator['entries']:
+            if 'PIs' in obj:
+                PIs = obj
+
+        return PIs['PIs']
+
+    def station(self):
+        """ return the station ID """
+
+        # decide if there is a station code object by looking for something with data type '2' in the character header
+        station = None
+        for obj in self.character_data_and_principal_investigator['entries']:
+            if 'Type of data' in obj:
+                if obj['Type of data'] == 2:
+                    station = obj['Character data']
+
+        return station
+
     def probe_type(self):
         """ Returns the contents of secondary header 29 if it exists,
             otherwise None. """
@@ -602,6 +625,8 @@ class WodProfile(object):
         df.time = self.time()
         df.cruise = self.cruise()
         df.probe_type = self.probe_type()
+        df.PIs = self.PIs()
+        df.station = self.station()
 
         return df
 
@@ -625,6 +650,8 @@ class WodProfile(object):
         d['time'] = self.time()
         d['uid'] = self.uid()
         d['year'] = self.year()
+        d['PIs'] = self.PIs()
+        d['station'] = self.station()
         # per level
         d['s'] = self.s()
         d['s_level_qc'] = self.s_level_qc()

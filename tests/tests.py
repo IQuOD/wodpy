@@ -262,8 +262,28 @@ class TestClass():
         np_pH = self.dictionary['pH']
 
         assert numpy.array_equal(pH, truth), 'pH levels should have been [8.100, 8.100, 8.100, 8.050], instead read %s' % pH.__str__()
-        assert numpy.array_equal(df_pH, truth), 'dataframe pH levels should have been , instead read [8.100, 8.100, 8.100, 8.050]\n%s' % df_pH.__str__()
+        assert numpy.array_equal(df_pH, truth), 'dataframe pH levels should have been [8.100, 8.100, 8.100, 8.050], instead read \n%s' % df_pH.__str__()
         assert numpy.array_equal(np_pH, truth), 'numpy dict pH levels should have been [8.100, 8.100, 8.100, 8.050], instead read %s' % np_pH.__str__()
 
+    def test_PI(self):
+        '''
+        check for PI code
+        '''
 
+        truth = [{'Variable code': 0, 'P.I. code': 215}, {'Variable code': 0, 'P.I. code': 216}, {'Variable code': -5006, 'P.I. code': 217}, {'Variable code': -5002, 'P.I. code': 218}]
+        PIs = self.demoProfile.PIs()
+        df_PIs = self.dataframe.PIs
+        np_PIs = self.dictionary['PIs']
+        assert numpy.array_equal(PIs, truth), 'PIs should have been [{"Variable code": 0, "P.I. code": 215}, {"Variable code": 0, "P.I. code": 216}, {"Variable code": -5006, "P.I. code": 217}, {"Variable code": -5002, "P.I. code": 218}], instead read %s' % PIs.__str__()
+        assert numpy.array_equal(df_PIs, truth), 'dataframe PIs should have been [{"Variable code": 0, "P.I. code": 215}, {"Variable code": 0, "P.I. code": 216}, {"Variable code": -5006, "P.I. code": 217}, {"Variable code": -5002, "P.I. code": 218}], instead read \n%s' % PIs.__str__()
+        assert numpy.array_equal(np_PIs, truth), 'numpy dict PIs should have been [{"Variable code": 0, "P.I. code": 215}, {"Variable code": 0, "P.I. code": 216}, {"Variable code": -5006, "P.I. code": 217}, {"Variable code": -5002, "P.I. code": 218}], instead read %s' % PIs.__str__()
 
+    def test_station(self):
+
+        truth = None
+        station = self.demoProfile.station()
+        df_station = self.dataframe.station
+        np_station = self.dictionary['station']
+        assert station is truth
+        assert df_station is truth
+        assert np_station is truth
