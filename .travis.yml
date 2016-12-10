@@ -7,6 +7,8 @@ services:
 
 before_install:
 - docker pull continuumio/anaconda
+- docker pull continuumio/anaconda3
 
 script:
 - docker run -v $PWD:/wodpy_latest continuumio/anaconda /bin/bash -c "cd /wodpy_latest; nosetests tests/*.py"
+- docker run -v $PWD:/wodpy_latest continuumio/anaconda3 /bin/bash -c "cd /wodpy_latest; nosetests tests/*.py"
