@@ -82,6 +82,8 @@ These functions decode data from the current profile.
  - `time()`: Returns the time.
  - `uid()`: Returns the unique identifier of the profile.
  - `year()`: Returns the year. 
+ - `PIs()`: Returns a list of objects with keys "Variable code" and "P.I. code"
+ - `station()`: Returns a string denoting the originator station
 
 **Per-level data:**
  - `oxygen()`: Returns a numpy masked array of oxygen content (mL / L).
@@ -132,6 +134,8 @@ Constructing the per-level `ndarrays` should not be done more than once per prof
  - `time`: in hours on the range [0, 24)
  - `uid`: unique identifier of profile
  - `year`
+ - `PIs`
+ - `station`
 
  Note that `DataFrame` attributes generally do not propagate to new `DataFrames` returned by operating on original `DataFrame`s.
 
