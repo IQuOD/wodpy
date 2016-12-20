@@ -278,12 +278,22 @@ class TestClass():
         assert numpy.array_equal(df_PIs, truth), 'dataframe PIs should have been [{"Variable code": 0, "P.I. code": 215}, {"Variable code": 0, "P.I. code": 216}, {"Variable code": -5006, "P.I. code": 217}, {"Variable code": -5002, "P.I. code": 218}], instead read \n%s' % PIs.__str__()
         assert numpy.array_equal(np_PIs, truth), 'numpy dict PIs should have been [{"Variable code": 0, "P.I. code": 215}, {"Variable code": 0, "P.I. code": 216}, {"Variable code": -5006, "P.I. code": 217}, {"Variable code": -5002, "P.I. code": 218}], instead read %s' % PIs.__str__()
 
-    def test_station(self):
+    def test_originator_cruise(self):
+
+        truth = 'STOCS85A'
+        originator_cruise = self.demoProfile.originator_cruise()
+        df_originator_cruise = self.dataframe.originator_cruise
+        np_originator_cruise = self.dictionary['originator_cruise']
+        assert originator_cruise == truth, 'Originator cruise should have been STOCS85A, instead read %s' % originator_cruise
+        assert df_originator_cruise == truth, 'dataframe riginator cruise should have been STOCS85A, instead read %s' % df_originator_cruise
+        assert np_originator_cruise == truth, 'numpy dict originator cruise should have been STOCS85A, instead read %s' % np_originator_cruise
+
+    def test_originator_station(self):
 
         truth = None
-        station = self.demoProfile.station()
-        df_station = self.dataframe.station
-        np_station = self.dictionary['station']
-        assert station is truth
-        assert df_station is truth
-        assert np_station is truth
+        originator_station = self.demoProfile.originator_station()
+        df_originator_station = self.dataframe.originator_station
+        np_originator_station = self.dictionary['originator_station']
+        assert originator_station == truth
+        assert df_originator_station == truth
+        assert np_originator_station == truth

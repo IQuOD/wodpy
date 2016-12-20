@@ -421,8 +421,20 @@ class WodProfile(object):
 
         return PIs['PIs']
 
-    def station(self):
-        """ return the station ID """
+    def originator_cruise(self):
+        """ return the originator cruise ID """
+
+        # decide if there is an originator cruise code object by looking for something with data type '1' in the character header
+        cruise = None
+        for obj in self.character_data_and_principal_investigator['entries']:
+            if 'Type of data' in obj:
+                if obj['Type of data'] == 1:
+                    cruise = obj['Character data']
+
+        return cruise
+
+    def originator_station(self):
+        """ return the originator station ID """
 
         # decide if there is a station code object by looking for something with data type '2' in the character header
         station = None
@@ -626,7 +638,8 @@ class WodProfile(object):
         df.cruise = self.cruise()
         df.probe_type = self.probe_type()
         df.PIs = self.PIs()
-        df.station = self.station()
+        df.originator_station = self.originator_station()
+        df.originator_cruise = self.originator_cruise()
 
         return df
 
@@ -651,7 +664,8 @@ class WodProfile(object):
         d['uid'] = self.uid()
         d['year'] = self.year()
         d['PIs'] = self.PIs()
-        d['station'] = self.station()
+        d['originator_station'] = self.originator_station()
+        d['originator_cruise'] = self.originator_cruise()
         # per level
         d['s'] = self.s()
         d['s_level_qc'] = self.s_level_qc()
