@@ -36,10 +36,9 @@ class WodProfile(object):
         assert self.file_position < os.fstat(fid.fileno()).st_size, 'At end of data file.'
         
         # Record if CR+LF characters are being used at the end of lines.
-        fid.seek(self.file_position + 80)
-        char = fid.read(1)
-        if char == '\r': 
-            self.cr = True 
+        firstline = fid.readline()
+        if(fid.tell() == self.file_position + 82):
+            self.cr = True
         else:
             self.cr = False
         fid.seek(self.file_position)
@@ -90,7 +89,7 @@ class WodProfile(object):
             if item[1] == 0: continue # Skip if not reading anything.
 
             chars = self._read_chars(fid, item[1])
- 
+
             # Check if we need to skip the next few items.
             if item[0] == 'Significant digits' and chars == '-':
                 format[i+1][1] = 0
