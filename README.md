@@ -5,6 +5,7 @@ Release History:
 
 version | DOI
 --------|----
+1.4.1   | <a href="https://zenodo.org/badge/latestdoi/39165450"><img src="https://zenodo.org/badge/39165450.svg" alt="DOI"></a>
 1.4.0   | <a href="http://dx.doi.org/10.5281/zenodo.225597"><img src="https://zenodo.org/badge/doi/10.5281/zenodo.225597.svg" alt="10.5281/zenodo.225597"></a>
 1.3.0   | <a href="http://dx.doi.org/10.5281/zenodo.47960"><img src="https://zenodo.org/badge/doi/10.5281/zenodo.47960.svg" alt="10.5281/zenodo.47960"></a>
 1.2.0   | <a href="http://dx.doi.org/10.5281/zenodo.46785"><img src="https://zenodo.org/badge/doi/10.5281/zenodo.46785.svg" alt="10.5281/zenodo.46785"></a>
