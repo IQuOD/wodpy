@@ -414,21 +414,23 @@ class WodProfile(object):
 
         # find the PI object, if it exits
         PIs = None
-        for obj in self.character_data_and_principal_investigator['entries']:
-            if 'PIs' in obj:
-                PIs = obj
+        if 'entries' in self.character_data_and_principal_investigator:
+            for obj in self.character_data_and_principal_investigator['entries']:
+                if 'PIs' in obj:
+                    PIs = obj['PIs']
 
-        return PIs['PIs']
+        return PIs
 
     def originator_cruise(self):
         """ return the originator cruise ID """
 
         # decide if there is an originator cruise code object by looking for something with data type '1' in the character header
         cruise = None
-        for obj in self.character_data_and_principal_investigator['entries']:
-            if 'Type of data' in obj:
-                if obj['Type of data'] == 1:
-                    cruise = obj['Character data']
+        if 'entries' in self.character_data_and_principal_investigator:
+            for obj in self.character_data_and_principal_investigator['entries']:
+                if 'Type of data' in obj:
+                    if obj['Type of data'] == 1:
+                        cruise = obj['Character data']
 
         return cruise
 
@@ -437,10 +439,11 @@ class WodProfile(object):
 
         # decide if there is a station code object by looking for something with data type '2' in the character header
         station = None
-        for obj in self.character_data_and_principal_investigator['entries']:
-            if 'Type of data' in obj:
-                if obj['Type of data'] == 2:
-                    station = obj['Character data']
+        if 'entries' in self.character_data_and_principal_investigator:
+            for obj in self.character_data_and_principal_investigator['entries']:
+                if 'Type of data' in obj:
+                    if obj['Type of data'] == 2:
+                        station = obj['Character data']
 
         return station
 
