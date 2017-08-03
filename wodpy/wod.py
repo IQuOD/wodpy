@@ -447,14 +447,24 @@ class WodProfile(object):
 
         return station
 
+    def extract_secondary_header(self, index):
+        """ Returns the contents of secondary header <index> if it exists,
+            otherwise None. """
+        header = None
+        for item in self.secondary_header['entries']:
+            if item['Code'] == index:
+                header = item['Value']
+        return header  
+
+    def originator_flag_type(self):
+        """ Returns the contents of secondary header 96 if it exists,
+            otherwise None. """
+        return extract_secondary_header(96)
+
     def probe_type(self):
         """ Returns the contents of secondary header 29 if it exists,
             otherwise None. """
-        pt = None
-        for item in self.secondary_header['entries']:
-            if item['Code'] == 29:
-                pt = item['Value']
-        return pt
+        return extract_secondary_header(29)
 
     def z(self):
         """ Returns a numpy masked array of depths. """
