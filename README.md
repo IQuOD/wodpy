@@ -88,6 +88,7 @@ These functions decode data from the current profile.
  - `originator_station()`: Returns a string denoting the originator station
  - `originator_cruise()`: Returns a string denoting the originator cruise
  - `originator_flag_type()`: Returns the index specifying the originator flag definitions (table 2.28 in http://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf)
+ - `extract_secondary_header(index)`: returns the value of the secondary header indexed by the `index` argument, where this index corresponds to the 'ID' column of table 4 in https://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf. For example, `extract_secondary_header(29)` is exactly equivalent to `probe_type()`.
 
 **Per-level data:**
  - `oxygen()`: Returns a numpy masked array of oxygen content (mL / L).
