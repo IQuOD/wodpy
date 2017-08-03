@@ -19,7 +19,7 @@ class TestClass():
         return
 
     # ===================================================================
-    # check the example from pp 137 of
+    # check the example from pp 124 of
     # http://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf
     # is extracted correctly by base functions.
     # data is in `example.dat`

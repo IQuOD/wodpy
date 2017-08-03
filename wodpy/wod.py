@@ -447,14 +447,24 @@ class WodProfile(object):
 
         return station
 
+    def extract_secondary_header(self, index):
+        """ Returns the contents of secondary header <index> if it exists,
+            otherwise None. """
+        header = None
+        for item in self.secondary_header['entries']:
+            if item['Code'] == index:
+                header = item['Value']
+        return header  
+
+    def originator_flag_type(self):
+        """ Returns the contents of secondary header 96 if it exists,
+            otherwise None. """
+        return self.extract_secondary_header(96)
+
     def probe_type(self):
         """ Returns the contents of secondary header 29 if it exists,
             otherwise None. """
-        pt = None
-        for item in self.secondary_header['entries']:
-            if item['Code'] == 29:
-                pt = item['Value']
-        return pt
+        return self.extract_secondary_header(29)
 
     def z(self):
         """ Returns a numpy masked array of depths. """
@@ -639,6 +649,7 @@ class WodProfile(object):
         df.time = self.time()
         df.cruise = self.cruise()
         df.probe_type = self.probe_type()
+        df.originator_flag_type = self.originator_flag_type()
         df.PIs = self.PIs()
         df.originator_station = self.originator_station()
         df.originator_cruise = self.originator_cruise()
@@ -668,6 +679,7 @@ class WodProfile(object):
         d['PIs'] = self.PIs()
         d['originator_station'] = self.originator_station()
         d['originator_cruise'] = self.originator_cruise()
+        d['originator_flag_type'] = self.originator_flag_type()
         # per level
         d['s'] = self.s()
         d['s_level_qc'] = self.s_level_qc()
