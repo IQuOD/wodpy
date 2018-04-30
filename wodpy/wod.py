@@ -41,6 +41,11 @@ class WodProfile(object):
             self.cr = True
         else:
             self.cr = False
+        # also catch if profile begins with 'Q' == IQuOD formatting
+        if firstline[0] == 'Q':
+            self.IQuOD = True
+        else:
+            self.IQuOD = False
         fid.seek(self.file_position)
 
         # Read the various sections of the profile record.
@@ -150,7 +155,25 @@ class WodProfile(object):
                      ['Bytes in next field',    1, int],
                      ['Number of levels',       0, int],
                      ['Profile type',           1, str],
-                     ['Number of variables',    2, int]]  
+                     ['Number of variables',    2, int]]
+
+        # insert additional data from IQuOD format if appropriate:
+        if self.IQuOD:
+            n = prhFormat.index(['Latitude', 0, float])
+            prhFormat[n:n] = [
+                ['Significant digits',     1, int],
+                ['Total digits',           1, int],
+                ['Precision',              1, int],
+                ['dLatitude',              0, float], 
+            ]
+
+            n = prhFormat.index(['Longitude', 0, float])
+            prhFormat[n:n] = [
+                ['Significant digits',     1, int],
+                ['Total digits',           1, int],
+                ['Precision',              1, int],
+                ['dLongitude',             0, float], 
+            ]
 
         varFormat = [['Bytes in next field',    1, int],
                      ['Variable code',          0, int],
@@ -164,6 +187,9 @@ class WodProfile(object):
                      ['Total digits',           1, int],
                      ['Precision',              1, int],
                      ['Value',                  0, float]]
+
+        if self.IQuOD:
+            metFormat.append(['intMeta', 1, int])
 
         primary_header = {}
 
@@ -223,7 +249,7 @@ class WodProfile(object):
 
     def _read_secondary_or_biological_header(self, fid, bio=False):
         # Reads either the secondary header or the biological 
-        # header. The format of the two are identical.
+        # header. The format of the two are almost identical.
 
         header  = {}
 
@@ -237,6 +263,9 @@ class WodProfile(object):
                    ['Total digits',                   1, int],
                    ['Precision',                      1, int],
                    ['Value',                          0, float]]
+
+        if not bio and self.IQuOD:
+            format3.append(['intMeta', 1, int])
 
         self._interpret_data(fid, format1, header)
         if 'Total bytes' in header:
@@ -299,6 +328,24 @@ class WodProfile(object):
                     ['Value',               0, float]]
         vFormat2 = [['Value quality control flag', 1, int],
                     ['Value originator flag',      1, int]]
+
+        # insert additional data from IQuOD format if appropriate:
+        if self.IQuOD:
+            n = dFormat1.index(['Depth', 0, float])
+            dFormat1[n:n] = [
+                ['Significant digits',     1, int],
+                ['Total digits',           1, int],
+                ['Precision',              1, int],
+                ['dDepth',               0, float], 
+            ]
+
+            n = vFormat1.index(['Value', 0, float])
+            vFormat1[n:n] = [
+                ['Significant digits',     1, int],
+                ['Total digits',           1, int],
+                ['Precision',              1, int],
+                ['dValue',               0, float], 
+            ]
 
         data = []
         for i in range(self.primary_header['Number of levels']):
