@@ -371,7 +371,7 @@ class WodProfile(object):
                 if (data[i]['variables'][j]['Value'] is not None):
                     data[i]['variables'][j]['Missing'] = False
                     self._interpret_data(fid, copy.deepcopy(vFormat2), data[i]['variables'][j])
-                    # flag missing value error values
+                    # flag missing error values
                     if 'dValue' in data[i]['variables'][j] and data[i]['variables'][j]['dValue'] is not None:
                         data[i]['variables'][j]['dMissing'] = False
                     else:
@@ -597,10 +597,28 @@ class WodProfile(object):
         data = np.ma.array(np.zeros(self.n_levels()), mask=True)
         if index is not None:
             for i in range(self.n_levels()):
-                if self.profile_data[i]['variables'][index]['dMissing']: continue
+                if self.profile_data[i]['variables'][index]['Missing'] or self.profile_data[i]['variables'][index]['dMissing']: continue
                 data[i] = self.profile_data[i]['variables'][index]['dValue']
         return data
 
+    def var_metadata(self, index):
+        """ Returns a list of dicts of metadata associated with a variable denoted by index """
+        if index is not None:
+            metadata = []
+            for m in self.primary_header['variables'][index]['metadata']:
+                meta = {
+                    'value': m['Value'] / 10**m['Value precision'],
+                    'code': m['Variable-specific code'],
+                }
+                if 'intMeta' in m:
+                    meta['intMeta'] = m['intMeta']
+                else:
+                    meta['intMeta'] = 0
+                metadata.append(meta)
+            return metadata
+        else:
+            return None
+                
     def var_level_qc(self, index, originator=False):
         """ Returns the quality control codes for the levels in the profile. """
         data = np.ma.array(np.zeros(self.n_levels()), mask=True, dtype=int)
@@ -659,17 +677,15 @@ class WodProfile(object):
         index = self.var_index()
         return self.var_level_qc(index, originator=originator)
 
-    def s_qc_mask(self):
-        """ Returns a boolean array showing which salinity
-            levels failed quality control. If the entire cast
-            was rejected then all levels are set to True."""
-        index = self.var_index(s=True)
-        return self.var_qc_mask(index)
-
     def t_profile_qc(self, originator=False):
         """ Returns the quality control flag for the temperature profile. """
         index = self.var_index()
         return self.var_profile_qc(index, originator=originator)
+
+    def t_metadata(self):
+        """ return the temperature metadata, if available """
+        index = self.var_index()
+        return self.var_metadata(index)
 
     def s(self):
         """ Returns a numpy masked array of salinity. """
@@ -681,6 +697,13 @@ class WodProfile(object):
         index = self.var_index(s=True)
         return self.dvar_data(index)
 
+    def s_qc_mask(self):
+        """ Returns a boolean array showing which salinity
+            levels failed quality control. If the entire cast
+            was rejected then all levels are set to True."""
+        index = self.var_index(s=True)
+        return self.var_qc_mask(index)
+
     def s_level_qc(self, originator=False):
         """ Returns the quality control flag for each salinity level. """
         index = self.var_index(s=True)
@@ -690,6 +713,11 @@ class WodProfile(object):
         """ Returns the quality control flag for the salinity profile. """
         index = self.var_index(s=True)
         return self.var_profile_qc(index, originator=originator)
+
+    def s_metadata(self):
+        """ return the salinity metadata, if available """
+        index = self.var_index(s=True)
+        return self.var_metadata(index)
 
     def oxygen(self):
         """ Returns a numpy masked array of oxygen content (mL / L) """
@@ -758,6 +786,8 @@ class WodProfile(object):
         df.PIs = self.PIs()
         df.originator_station = self.originator_station()
         df.originator_cruise = self.originator_cruise()
+        df.temperature_metadata = self.t_metadata()
+        df.salinity_metadata = self.s_metadata()
 
         return df
 
@@ -787,6 +817,8 @@ class WodProfile(object):
         d['originator_station'] = self.originator_station()
         d['originator_cruise'] = self.originator_cruise()
         d['originator_flag_type'] = self.originator_flag_type()
+        d['t_metadata'] = self.t_metadata()
+        d['s_metadata'] = self.s_metadata()
         # per level
         d['s'] = self.s()
         d['ds'] = self.ds()

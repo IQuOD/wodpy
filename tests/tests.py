@@ -5,19 +5,28 @@ import numpy, math, pandas
 class TestClass():
     def setUp(self):
 
-        #create an artificial profile to trigger the temperature flag
-        #sets first temperature to 99.9; otherwise identical to data/example.dat
-        f1 = open("tests/testData/example.dat")
-        self.demoProfile = wod.WodProfile(f1)
-        self.dataframe = self.demoProfile.df()
-        self.dictionary = self.demoProfile.npdict()
-        self.head = self.demoProfile.header()
+        # WOD13 format data
+        classic = open("tests/testData/classic.dat")
+        # example from pp 124 of http://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf
+        self.classic1 = wod.WodProfile(classic)
+        self.classic1_df = self.classic1.df()
+        self.classic1_dict = self.classic1.npdict()
+        self.classic1_head = self.classic1.header()
+        # example with missing salinity information
+        self.classic2 = wod.WodProfile(classic)
 
-        f2 = open("tests/testData/iquod.01.dat")
-        self.demoIQuODProfile = wod.WodProfile(f2)
-        self.IQuODdataframe = self.demoIQuODProfile.df()
-        self.IQuODdictionary = self.demoIQuODProfile.npdict()
-        self.IQuODhead = self.demoIQuODProfile.header()        
+        # IQuOD 0.1 format data
+        # short example (unpacked by hand to validate)
+        iquod = open("tests/testData/iquod.dat")
+        self.iquod1 = wod.WodProfile(iquod)
+        self.iquod1_df = self.iquod1.df()
+        self.iquod1_dict = self.iquod1.npdict()
+        self.iquod1_head = self.iquod1.header()    
+        # example with some metadata
+        self.iquod2 = wod.WodProfile(iquod)
+        self.iquod2_df = self.iquod2.df()
+        self.iquod2_dict = self.iquod2.npdict()
+    
         return
 
     def tearDown(self):
@@ -34,10 +43,10 @@ class TestClass():
         check latitude == 61.930
         '''
 
-        latitude = self.demoProfile.latitude()
-        df_latitude = self.dataframe.latitude
-        np_latitude = self.dictionary['latitude']
-        header_latitude = self.head.latitude
+        latitude = self.classic1.latitude()
+        df_latitude = self.classic1_df.latitude
+        np_latitude = self.classic1_dict['latitude']
+        header_latitude = self.classic1_head.latitude
         assert latitude == 61.930, 'latitude should have been 61.930, instead read %f' % latitude
         assert df_latitude == 61.930, 'dataframe latitude should have been 61.930, instead read %f' % df_latitude
         assert np_latitude == 61.930, 'np dict latitude should have been 61.930, instead read %f' % np_latitude
@@ -48,10 +57,10 @@ class TestClass():
         check latitude error is None
         '''
 
-        dLatitude = self.demoProfile.dlatitude()
-        df_dlatitude = self.dataframe.dlatitude
-        np_dlatitude = self.dictionary['dlatitude']
-        header_dlatitude = self.head.dlatitude
+        dLatitude = self.classic1.dlatitude()
+        df_dlatitude = self.classic1_df.dlatitude
+        np_dlatitude = self.classic1_dict['dlatitude']
+        header_dlatitude = self.classic1_head.dlatitude
         assert dLatitude is None, 'latitude error is undefined for this profile, instead read %f' % dLatitude
         assert df_dlatitude is None, 'dataframe latitude error is undefined for this profile, instead read %f' % df_dlatitude
         assert np_dlatitude is None, 'npdict latitude error is undefined for this profile, instead read %f' % np_dlatitude
@@ -62,10 +71,10 @@ class TestClass():
         check longitude == -172.270
         '''
 
-        longitude = self.demoProfile.longitude()
-        df_longitude = self.dataframe.longitude
-        np_longitude = self.dictionary['longitude']
-        header_longitude = self.head.longitude
+        longitude = self.classic1.longitude()
+        df_longitude = self.classic1_df.longitude
+        np_longitude = self.classic1_dict['longitude']
+        header_longitude = self.classic1_head.longitude
         assert longitude == -172.270, 'longitude should have been -172.270, instead read %f' % longitude
         assert df_longitude == -172.270, 'dataframe longitude should have been -172.270, instead read %f' % df_longitude
         assert np_longitude == -172.270, 'np dict longitude should have been -172.270, instead read %f' % np_longitude
@@ -76,10 +85,10 @@ class TestClass():
         check longitude error is None
         '''
 
-        dLongitude = self.demoProfile.dlongitude()
-        df_dlongitude = self.dataframe.dlongitude
-        np_dlongitude = self.dictionary['dlongitude']
-        header_dlongitude = self.head.dlongitude
+        dLongitude = self.classic1.dlongitude()
+        df_dlongitude = self.classic1_df.dlongitude
+        np_dlongitude = self.classic1_dict['dlongitude']
+        header_dlongitude = self.classic1_head.dlongitude
         assert dLongitude is None, 'longitude error is undefined for this profile, instead read %f' % dLongitude
         assert df_dlongitude is None, 'dataframe longitude error is undefined for this profile, instead read %f' % df_dlongitude
         assert np_dlongitude is None, 'np dict longitude error is undefined for this profile, instead read %f' % np_dlongitude
@@ -90,10 +99,10 @@ class TestClass():
         check cruise ID == 67064
         '''
 
-        uid = self.demoProfile.uid()
-        df_uid = self.dataframe.uid
-        np_uid = self.dictionary['uid']
-        header_uid = self.head.uid
+        uid = self.classic1.uid()
+        df_uid = self.classic1_df.uid
+        np_uid = self.classic1_dict['uid']
+        header_uid = self.classic1_head.uid
         assert uid == 67064, 'uid should have been 67064, instead read %f' % uid
         assert df_uid == 67064, 'dataframe uid should have been 67064, instead read %f' % df_uid
         assert np_uid == 67064, 'np dict uid should have been 67064, instead read %f' % np_uid
@@ -104,10 +113,10 @@ class TestClass():
         check the number of levels == 4
         '''
 
-        levels = self.demoProfile.n_levels()
-        df_levels = self.dataframe.n_levels
-        np_levels = self.dictionary['n_levels']
-        header_n_levels = self.head.n_levels
+        levels = self.classic1.n_levels()
+        df_levels = self.classic1_df.n_levels
+        np_levels = self.classic1_dict['n_levels']
+        header_n_levels = self.classic1_head.n_levels
         assert levels == 4, 'levels should have been 4, instead read %f' % levels
         assert df_levels == 4, 'dataframe levels should have been 4, instead read %f' % df_levels
         assert np_levels == 4, 'np dict levels should have been 4, instead read %f' % np_levels
@@ -118,10 +127,10 @@ class TestClass():
         check year == 1934
         '''
 
-        year = self.demoProfile.year()
-        df_year = self.dataframe.year
-        np_year = self.dictionary['year']
-        header_year = self.head.year
+        year = self.classic1.year()
+        df_year = self.classic1_df.year
+        np_year = self.classic1_dict['year']
+        header_year = self.classic1_head.year
         assert year == 1934, 'year should have been 1934, instead read %f' % year
         assert df_year == 1934, 'dataframe year should have been 1934, instead read %f' % df_year
         assert np_year == 1934, 'np dict year should have been 1934, instead read %f' % np_year
@@ -132,10 +141,10 @@ class TestClass():
         check month == 8
         '''
 
-        month = self.demoProfile.month() 
-        df_month = self.dataframe.month
-        np_month = self.dictionary['month']
-        header_month = self.head.month
+        month = self.classic1.month() 
+        df_month = self.classic1_df.month
+        np_month = self.classic1_dict['month']
+        header_month = self.classic1_head.month
         assert month == 8, 'month should have been 8, instead read %f' % month
         assert df_month == 8, 'dataframe month should have been 8, instead read %f' % df_month
         assert np_month == 8, 'np dict month should have been 8, instead read %f' % np_month
@@ -147,10 +156,10 @@ class TestClass():
         check day == 7
         '''
 
-        day = self.demoProfile.day()
-        df_day = self.dataframe.day
-        np_day = self.dictionary['day']
-        header_day = self.head.day
+        day = self.classic1.day()
+        df_day = self.classic1_df.day
+        np_day = self.classic1_dict['day']
+        header_day = self.classic1_head.day
         assert day == 7, 'day should have been 7, instead read %f' % day
         assert df_day == 7, 'dataframe day should have been 7, instead read %f' % df_day
         assert np_day == 7, 'np dict day should have been 7, instead read %f' % np_day
@@ -161,10 +170,10 @@ class TestClass():
         check time == 10.37
         '''
 
-        time = self.demoProfile.time()
-        df_time = self.dataframe.time
-        np_time = self.dictionary['time']
-        header_time = self.head.time
+        time = self.classic1.time()
+        df_time = self.classic1_df.time
+        np_time = self.classic1_dict['time']
+        header_time = self.classic1_head.time
         assert time == 10.37, 'time should have been 10.37, instead read %f' % time
         assert df_time == 10.37, 'dataframe time should have been 10.37, instead read %f' % df_time
         assert np_time == 10.37, 'np dict time should have been 10.37, instead read %f' % np_time
@@ -176,7 +185,7 @@ class TestClass():
         check datetime 1934-8-7 10:22:12
         '''
 
-        d = self.demoProfile.datetime()
+        d = self.classic1.datetime()
         assert d == datetime(1934, 8, 7, 10, 22, 12), \
                 'time should have been 1934-08-07 10:22:12, instead read %s' \
                 % d
@@ -187,10 +196,10 @@ class TestClass():
         check probe type == 7
         '''
 
-        probe = self.demoProfile.probe_type() 
-        df_probe = self.dataframe.probe_type
-        np_probe = self.dictionary['probe_type']
-        header_probe = self.head.probe_type
+        probe = self.classic1.probe_type() 
+        df_probe = self.classic1_df.probe_type
+        np_probe = self.classic1_dict['probe_type']
+        header_probe = self.classic1_head.probe_type
         assert probe == 7, 'probe should have been 7, instead read %f' % probe
         assert df_probe == 7, 'dataframe probe should have been 7, instead read %f' % df_probe
         assert np_probe == 7, 'np dict probe should have been 7, instead read %f' % np_probe
@@ -203,9 +212,9 @@ class TestClass():
         '''
 
         truth = [0.0, 10.0, 25.0, 50.0]
-        z = self.demoProfile.z()
-        df_z = self.dataframe['depth']
-        np_z = self.dictionary['z']
+        z = self.classic1.z()
+        df_z = self.classic1_df['depth']
+        np_z = self.classic1_dict['z']
         assert numpy.array_equal(z, truth), 'depths should have been [0, 10, 25, 50], instead read %s' % z.__str__()
         assert numpy.array_equal(df_z, truth), 'dataframe depths should have been [0, 10, 25, 50], instead read %s' % df_z.tolist().__str__()
         assert numpy.array_equal(np_z, truth), 'numpy dict depths should have been [0, 10, 25, 50], instead read %s' % np_z.__str__()
@@ -217,9 +226,9 @@ class TestClass():
 
         truth = numpy.ma.MaskedArray([0,0,0,0], [True, True, True, True])
         dftruth = pandas.Series(numpy.nan, index=[0,1,2,3])
-        dz = self.demoProfile.dz()
-        df_dz = self.dataframe['ddepth']
-        np_dz = self.dictionary['dz']
+        dz = self.classic1.dz()
+        df_dz = self.classic1_df['ddepth']
+        np_dz = self.classic1_dict['dz']
         assert numpy.array_equal(dz, truth), 'depth errors should have been all masked, instead read %s' % dz.__str__()
         assert df_dz.equals(dftruth), 'dataframe depth errors should have been all masked, instead read %s' % df_dz.__str__()
         assert numpy.array_equal(np_dz, truth), 'numpy dict depth errors should have been all masked, instead read %s' % np_dz.__str__()
@@ -230,9 +239,9 @@ class TestClass():
         '''
 
         truth = [8.960, 8.950, 0.900, -1.230]
-        t = self.demoProfile.t()
-        df_t = self.dataframe['temperature']
-        np_t = self.dictionary['t']
+        t = self.classic1.t()
+        df_t = self.classic1_df['temperature']
+        np_t = self.classic1_dict['t']
         assert numpy.array_equal(t, truth), 'temperatures should have been [8.96, 8.95, 0.9, -1.23], instead read %s' % t.__str__()
         assert numpy.array_equal(df_t, truth), 'dataframe temperatures should have been [8.96, 8.95, 0.9, -1.23], instead read \n%s' % df_t.__str__()
         assert numpy.array_equal(np_t, truth), 'numpy dict temperatures should have been [8.96, 8.95, 0.9, -1.23], instead read %s' % np_t.__str__()
@@ -244,9 +253,9 @@ class TestClass():
 
         truth = numpy.ma.MaskedArray([0,0,0,0], [True, True, True, True])
         dftruth = pandas.Series(numpy.nan, index=[0,1,2,3])
-        dt = self.demoProfile.dt()
-        df_dt = self.dataframe['dtemperature']
-        np_dt = self.dictionary['dt']
+        dt = self.classic1.dt()
+        df_dt = self.classic1_df['dtemperature']
+        np_dt = self.classic1_dict['dt']
    
         assert numpy.array_equal(dt, truth), 'temperature errors should have been all masked, instead read %s' % dt.__str__()
         assert df_dt.equals(dftruth), 'dataframe temperature errors should have been all masked, instead read %s' % df_dt.__str__()
@@ -259,9 +268,9 @@ class TestClass():
         '''
         
         truth = [30.900, 30.900, 31.910, 32.410]
-        s = self.demoProfile.s()
-        df_s = self.dataframe['salinity']
-        np_s = self.dictionary['s']
+        s = self.classic1.s()
+        df_s = self.classic1_df['salinity']
+        np_s = self.classic1_dict['s']
         assert numpy.array_equal(s, truth), 'salinities should have been [30.9, 30.9, 31.91, 32.41], instead read %s' % s.__str__()
         assert numpy.array_equal(df_s, truth), 'dataframe salinities should have been [30.9, 30.9, 31.91, 32.41], instead read \n%s' % df_s.__str__()
         assert numpy.array_equal(np_s, truth), 'numpy dict salinities should have been [30.9, 30.9, 31.91, 32.41], instead read %s' % np_s.__str__()
@@ -273,9 +282,9 @@ class TestClass():
 
         truth = numpy.ma.MaskedArray([0,0,0,0], [True, True, True, True])
         dftruth = pandas.Series(numpy.nan, index=[0,1,2,3])
-        ds = self.demoProfile.ds()
-        df_ds = self.dataframe['dsalinity']
-        np_ds = self.dictionary['ds']
+        ds = self.classic1.ds()
+        df_ds = self.classic1_df['dsalinity']
+        np_ds = self.classic1_dict['ds']
    
         assert numpy.array_equal(ds, truth), 'salinity errors should have been all masked, instead read %s' % ds.__str__()
         assert df_ds.equals(dftruth), 'dataframe salinity errors should have been all masked, instead read %s' % df_ds.__str__()
@@ -287,9 +296,9 @@ class TestClass():
         '''
 
         truth = [6.750, 6.700, 8.620, 7.280]
-        o2 = self.demoProfile.oxygen()
-        df_o2 = self.dataframe['oxygen']
-        np_o2 = self.dictionary['oxygen']
+        o2 = self.classic1.oxygen()
+        df_o2 = self.classic1_df['oxygen']
+        np_o2 = self.classic1_dict['oxygen']
 
         assert numpy.array_equal(o2, truth), 'oxygen levels should have been [6.750, 6.700, 8.620, 7.280], instead read %s' % o2.__str__()
         assert numpy.array_equal(df_o2, truth), 'dataframe oxygen levels should have been [6.750, 6.700, 8.620, 7.280], instead read \n%s' % df_o2.__str__()
@@ -301,9 +310,9 @@ class TestClass():
         '''
 
         truth = [0.650, 0.710, 0.900, 1.170]
-        phos = self.demoProfile.phosphate()
-        df_phos = self.dataframe['phosphate']
-        np_phos = self.dictionary['phosphate']
+        phos = self.classic1.phosphate()
+        df_phos = self.classic1_df['phosphate']
+        np_phos = self.classic1_dict['phosphate']
 
         assert numpy.array_equal(phos, truth), 'phosphate levels should have been [0.650, 0.710, 0.900, 1.170], instead read %s' % phos.__str__()
         assert numpy.array_equal(df_phos, truth), 'dataframe phosphate levels should have been [0.650, 0.710, 0.900, 1.170], instead read \n%s' % df_phos.__str__()
@@ -315,9 +324,9 @@ class TestClass():
         '''
 
         truth = [20.500, 12.300, 15.400, 25.600]
-        sili = self.demoProfile.silicate()
-        df_sili = self.dataframe['silicate']
-        np_sili = self.dictionary['silicate']
+        sili = self.classic1.silicate()
+        df_sili = self.classic1_df['silicate']
+        np_sili = self.classic1_dict['silicate']
 
         assert numpy.array_equal(sili, truth), 'silicate levels should have been [20.500, 12.300, 15.400, 25.600], instead read %s' % sili.__str__()
         assert numpy.array_equal(df_sili, truth), 'dataframe silicate levels should have been [20.500, 12.300, 15.400, 25.600], instead read \n%s' % df_sili.__str__()
@@ -329,9 +338,9 @@ class TestClass():
         '''
 
         truth = [8.100, 8.100, 8.100, 8.050]
-        pH = self.demoProfile.pH()
-        df_pH = self.dataframe['pH']
-        np_pH = self.dictionary['pH']
+        pH = self.classic1.pH()
+        df_pH = self.classic1_df['pH']
+        np_pH = self.classic1_dict['pH']
 
         assert numpy.array_equal(pH, truth), 'pH levels should have been [8.100, 8.100, 8.100, 8.050], instead read %s' % pH.__str__()
         assert numpy.array_equal(df_pH, truth), 'dataframe pH levels should have been [8.100, 8.100, 8.100, 8.050], instead read \n%s' % df_pH.__str__()
@@ -343,9 +352,9 @@ class TestClass():
         '''
 
         truth = [{'Variable code': 0, 'P.I. code': 215}, {'Variable code': 0, 'P.I. code': 216}, {'Variable code': -5006, 'P.I. code': 217}, {'Variable code': -5002, 'P.I. code': 218}]
-        PIs = self.demoProfile.PIs()
-        df_PIs = self.dataframe.PIs
-        np_PIs = self.dictionary['PIs']
+        PIs = self.classic1.PIs()
+        df_PIs = self.classic1_df.PIs
+        np_PIs = self.classic1_dict['PIs']
         assert numpy.array_equal(PIs, truth), 'PIs should have been [{"Variable code": 0, "P.I. code": 215}, {"Variable code": 0, "P.I. code": 216}, {"Variable code": -5006, "P.I. code": 217}, {"Variable code": -5002, "P.I. code": 218}], instead read %s' % PIs.__str__()
         assert numpy.array_equal(df_PIs, truth), 'dataframe PIs should have been [{"Variable code": 0, "P.I. code": 215}, {"Variable code": 0, "P.I. code": 216}, {"Variable code": -5006, "P.I. code": 217}, {"Variable code": -5002, "P.I. code": 218}], instead read \n%s' % PIs.__str__()
         assert numpy.array_equal(np_PIs, truth), 'numpy dict PIs should have been [{"Variable code": 0, "P.I. code": 215}, {"Variable code": 0, "P.I. code": 216}, {"Variable code": -5006, "P.I. code": 217}, {"Variable code": -5002, "P.I. code": 218}], instead read %s' % PIs.__str__()
@@ -353,9 +362,9 @@ class TestClass():
     def test_originator_cruise(self):
 
         truth = 'STOCS85A'
-        originator_cruise = self.demoProfile.originator_cruise()
-        df_originator_cruise = self.dataframe.originator_cruise
-        np_originator_cruise = self.dictionary['originator_cruise']
+        originator_cruise = self.classic1.originator_cruise()
+        df_originator_cruise = self.classic1_df.originator_cruise
+        np_originator_cruise = self.classic1_dict['originator_cruise']
         assert originator_cruise == truth, 'Originator cruise should have been STOCS85A, instead read %s' % originator_cruise
         assert df_originator_cruise == truth, 'dataframe riginator cruise should have been STOCS85A, instead read %s' % df_originator_cruise
         assert np_originator_cruise == truth, 'numpy dict originator cruise should have been STOCS85A, instead read %s' % np_originator_cruise
@@ -363,12 +372,26 @@ class TestClass():
     def test_originator_station(self):
 
         truth = None
-        originator_station = self.demoProfile.originator_station()
-        df_originator_station = self.dataframe.originator_station
-        np_originator_station = self.dictionary['originator_station']
+        originator_station = self.classic1.originator_station()
+        df_originator_station = self.classic1_df.originator_station
+        np_originator_station = self.classic1_dict['originator_station']
         assert originator_station == truth
         assert df_originator_station == truth
         assert np_originator_station == truth
+
+    # ===================================================================
+    # spot check another pre-iquod profile with many missing values
+    # data: example.meta.dat
+
+    def test_missing_vars(self):
+        '''
+        check that error value extraction does not fail when measured value is missing
+        note if a variable value is missing, wodpy assumes the error on the value will also be missing
+        '''
+
+        truth = numpy.ma.MaskedArray([0]*24, [True]*24)
+        ds = self.classic2.ds()
+        assert numpy.array_equal(ds, truth), 'expected salinity errors to all be missing, but got %s instead' % ds.__str__()
 
     # ===================================================================
     # check that an IQuOD v 0.1 profile is unpacked correctly
@@ -379,10 +402,10 @@ class TestClass():
         check latitude == 34.5883
         '''
 
-        latitude = self.demoIQuODProfile.latitude()
-        df_latitude = self.IQuODdataframe.latitude
-        np_latitude = self.IQuODdictionary['latitude']
-        header_latitude = self.IQuODhead.latitude
+        latitude = self.iquod1.latitude()
+        df_latitude = self.iquod1_df.latitude
+        np_latitude = self.iquod1_dict['latitude']
+        header_latitude = self.iquod1_head.latitude
         assert latitude == 34.5883, 'latitude should have been 34.5883, instead read %f' % latitude
         assert df_latitude == 34.5883, 'dataframe latitude should have been 34.5883, instead read %f' % df_latitude
         assert np_latitude == 34.5883, 'np dict latitude should have been 34.5883, instead read %f' % np_latitude
@@ -393,10 +416,10 @@ class TestClass():
         check latitude error is None
         '''
 
-        dLatitude = self.demoIQuODProfile.dlatitude()
-        df_dlatitude = self.IQuODdataframe.dlatitude
-        np_dlatitude = self.IQuODdictionary['dlatitude']
-        header_dlatitude = self.IQuODhead.dlatitude
+        dLatitude = self.iquod1.dlatitude()
+        df_dlatitude = self.iquod1_df.dlatitude
+        np_dlatitude = self.iquod1_dict['dlatitude']
+        header_dlatitude = self.iquod1_head.dlatitude
         assert dLatitude is None, 'latitude error is undefined for this profile, instead read %f' % dLatitude
         assert df_dlatitude is None, 'dataframe latitude error is undefined for this profile, instead read %f' % df_dlatitude
         assert np_dlatitude is None, 'npdict latitude error is undefined for this profile, instead read %f' % np_dlatitude
@@ -407,10 +430,10 @@ class TestClass():
         check longitude == 134.2433
         '''
 
-        longitude = self.demoIQuODProfile.longitude()
-        df_longitude = self.IQuODdataframe.longitude
-        np_longitude = self.IQuODdictionary['longitude']
-        header_longitude = self.IQuODhead.longitude
+        longitude = self.iquod1.longitude()
+        df_longitude = self.iquod1_df.longitude
+        np_longitude = self.iquod1_dict['longitude']
+        header_longitude = self.iquod1_head.longitude
         assert longitude == 134.2433, 'longitude should have been 134.2433, instead read %f' % longitude
         assert df_longitude == 134.2433, 'dataframe longitude should have been 134.2433, instead read %f' % df_longitude
         assert np_longitude == 134.2433, 'np dict longitude should have been 134.2433, instead read %f' % np_longitude
@@ -421,10 +444,10 @@ class TestClass():
         check longitude error is None
         '''
 
-        dLongitude = self.demoIQuODProfile.dlongitude()
-        df_dlongitude = self.IQuODdataframe.dlongitude
-        np_dlongitude = self.IQuODdictionary['dlongitude']
-        header_dlongitude = self.IQuODhead.dlongitude
+        dLongitude = self.iquod1.dlongitude()
+        df_dlongitude = self.iquod1_df.dlongitude
+        np_dlongitude = self.iquod1_dict['dlongitude']
+        header_dlongitude = self.iquod1_head.dlongitude
         assert dLongitude is None, 'longitude error is undefined for this profile, instead read %f' % dLongitude
         assert df_dlongitude is None, 'dataframe longitude error is undefined for this profile, instead read %f' % df_dlongitude
         assert np_dlongitude is None, 'npdict longitude error is undefined for this profile, instead read %f' % np_dlongitude
@@ -436,10 +459,10 @@ class TestClass():
         check cruise ID == 13393621
         '''
 
-        uid = self.demoIQuODProfile.uid()
-        df_uid = self.IQuODdataframe.uid
-        np_uid = self.IQuODdictionary['uid']
-        header_uid = self.IQuODhead.uid
+        uid = self.iquod1.uid()
+        df_uid = self.iquod1_df.uid
+        np_uid = self.iquod1_dict['uid']
+        header_uid = self.iquod1_head.uid
         assert uid == 13393621, 'uid should have been 13393621, instead read %f' % uid
         assert df_uid == 13393621, 'dataframe uid should have been 13393621, instead read %f' % df_uid
         assert np_uid == 13393621, 'np dict uid should have been 13393621, instead read %f' % np_uid
@@ -450,10 +473,10 @@ class TestClass():
         check the number of levels == 5
         '''
 
-        levels = self.demoIQuODProfile.n_levels()
-        df_levels = self.IQuODdataframe.n_levels
-        np_levels = self.IQuODdictionary['n_levels']
-        header_n_levels = self.IQuODhead.n_levels
+        levels = self.iquod1.n_levels()
+        df_levels = self.iquod1_df.n_levels
+        np_levels = self.iquod1_dict['n_levels']
+        header_n_levels = self.iquod1_head.n_levels
         assert levels == 5, 'levels should have been 5, instead read %f' % levels
         assert df_levels == 5, 'dataframe levels should have been 5, instead read %f' % df_levels
         assert np_levels == 5, 'np dict levels should have been 5, instead read %f' % np_levels
@@ -464,10 +487,10 @@ class TestClass():
         check year == 2000
         '''
 
-        year = self.demoIQuODProfile.year()
-        df_year = self.IQuODdataframe.year
-        np_year = self.IQuODdictionary['year']
-        header_year = self.IQuODhead.year
+        year = self.iquod1.year()
+        df_year = self.iquod1_df.year
+        np_year = self.iquod1_dict['year']
+        header_year = self.iquod1_head.year
         assert year == 2000, 'year should have been 2000, instead read %f' % year
         assert df_year == 2000, 'dataframe year should have been 2000, instead read %f' % df_year
         assert np_year == 2000, 'np dict year should have been 2000, instead read %f' % np_year
@@ -480,10 +503,10 @@ class TestClass():
         check month == 1
         '''
 
-        month = self.demoIQuODProfile.month() 
-        df_month = self.IQuODdataframe.month
-        np_month = self.IQuODdictionary['month']
-        header_month = self.IQuODhead.month
+        month = self.iquod1.month() 
+        df_month = self.iquod1_df.month
+        np_month = self.iquod1_dict['month']
+        header_month = self.iquod1_head.month
         assert month == 1, 'month should have been 1, instead read %f' % month
         assert df_month == 1, 'dataframe month should have been 1, instead read %f' % df_month
         assert np_month == 1, 'np dict month should have been 1, instead read %f' % np_month
@@ -495,10 +518,10 @@ class TestClass():
         check day == 4
         '''
 
-        day = self.demoIQuODProfile.day()
-        df_day = self.IQuODdataframe.day
-        np_day = self.IQuODdictionary['day']
-        header_day = self.IQuODhead.day
+        day = self.iquod1.day()
+        df_day = self.iquod1_df.day
+        np_day = self.iquod1_dict['day']
+        header_day = self.iquod1_head.day
         assert day == 4, 'day should have been 4, instead read %f' % day
         assert df_day == 4, 'dataframe day should have been 4, instead read %f' % df_day
         assert np_day == 4, 'np dict day should have been 4, instead read %f' % np_day
@@ -509,10 +532,10 @@ class TestClass():
         check time == 3.7
         '''
 
-        time = self.demoIQuODProfile.time()
-        df_time = self.IQuODdataframe.time
-        np_time = self.IQuODdictionary['time']
-        header_time = self.IQuODhead.time
+        time = self.iquod1.time()
+        df_time = self.iquod1_df.time
+        np_time = self.iquod1_dict['time']
+        header_time = self.iquod1_head.time
         assert time == 3.7, 'time should have been 3.7, instead read %f' % time
         assert df_time == 3.7, 'dataframe time should have been 3.7, instead read %f' % df_time
         assert np_time == 3.7, 'np dict time should have been 3.7, instead read %f' % np_time
@@ -524,7 +547,7 @@ class TestClass():
         check datetime 2000-1-4 3:42:00
         '''
 
-        d = self.demoIQuODProfile.datetime()
+        d = self.iquod1.datetime()
         assert d == datetime(2000, 1, 4, 3, 42, 00), \
                 'time should have been 2000-01-04 3:42:00, instead read %s' \
                 % d
@@ -535,10 +558,10 @@ class TestClass():
         check probe type == 4
         '''
 
-        probe = self.demoIQuODProfile.probe_type() 
-        df_probe = self.IQuODdataframe.probe_type
-        np_probe = self.IQuODdictionary['probe_type']
-        header_probe = self.IQuODhead.probe_type
+        probe = self.iquod1.probe_type() 
+        df_probe = self.iquod1_df.probe_type
+        np_probe = self.iquod1_dict['probe_type']
+        header_probe = self.iquod1_head.probe_type
         assert probe == 4, 'probe should have been 4, instead read %f' % probe
         assert df_probe == 4, 'dataframe probe should have been 4, instead read %f' % df_probe
         assert np_probe == 4, 'np dict probe should have been 4, instead read %f' % np_probe
@@ -551,9 +574,9 @@ class TestClass():
         '''
 
         truth = [0,2,5,10,20]
-        z = self.demoIQuODProfile.z()
-        df_z = self.IQuODdataframe['depth']
-        np_z = self.IQuODdictionary['z']
+        z = self.iquod1.z()
+        df_z = self.iquod1_df['depth']
+        np_z = self.iquod1_dict['z']
         assert numpy.array_equal(z, truth), 'depths should have been [0,2,5,10,20], instead read %s' % z.__str__()
         assert numpy.array_equal(df_z, truth), 'dataframe depths should have been [0,2,5,10,20], instead read %s' % df_z.tolist().__str__()
         assert numpy.array_equal(np_z, truth), 'numpy dict depths should have been [0,2,5,10,20], instead read %s' % np_z.__str__()
@@ -564,9 +587,9 @@ class TestClass():
         '''
 
         truth = [0,.0016,.004,.008,.016]
-        dz = self.demoIQuODProfile.dz()
-        df_dz = self.IQuODdataframe['ddepth']
-        np_dz = self.IQuODdictionary['dz']
+        dz = self.iquod1.dz()
+        df_dz = self.iquod1_df['ddepth']
+        np_dz = self.iquod1_dict['dz']
         assert numpy.array_equal(dz, truth), 'depth errors should have been [0,.0016,.004,.008,.016], instead read %s' % dz.__str__()
         assert numpy.array_equal(df_dz, truth), 'dataframe depth errors should have been [0,.0016,.004,.008,.016], instead read %s' % df_dz.__str__()
         assert numpy.array_equal(np_dz, truth), 'numpy dict depth errors should have been [0,.0016,.004,.008,.016], instead read %s' % np_dz.__str__()
@@ -577,9 +600,9 @@ class TestClass():
         '''
 
         truth = [11.1,11.2,11.0,11.0,11.0]
-        t = self.demoIQuODProfile.t()
-        df_t = self.IQuODdataframe['temperature']
-        np_t = self.IQuODdictionary['t']
+        t = self.iquod1.t()
+        df_t = self.iquod1_df['temperature']
+        np_t = self.iquod1_dict['t']
         assert numpy.array_equal(t, truth), 'temperatures should have been [11.1,11.2,11.0,11.0,11.0], instead read %s' % t.__str__()
         assert numpy.array_equal(df_t, truth), 'dataframe temperatures should have been [11.1,11.2,11.0,11.0,11.0], instead read \n%s' % df_t.__str__()
         assert numpy.array_equal(np_t, truth), 'numpy dict temperatures should have been [11.1,11.2,11.0,11.0,11.0], instead read %s' % np_t.__str__()
@@ -590,9 +613,9 @@ class TestClass():
         '''
 
         truth = [.01,.01,.01,.01,.01]
-        dt = self.demoIQuODProfile.dt()
-        df_dt = self.IQuODdataframe['dtemperature']
-        np_dt = self.IQuODdictionary['dt']
+        dt = self.iquod1.dt()
+        df_dt = self.iquod1_df['dtemperature']
+        np_dt = self.iquod1_dict['dt']
         assert numpy.array_equal(dt, truth), 'temperature errors should have been [.01,.01,.01,.01,.01], instead read %s' % dt.__str__()
         assert numpy.array_equal(df_dt, truth), 'dataframe temperature errors should have been [.01,.01,.01,.01,.01], instead read %s' % df_dt.__str__()
         assert numpy.array_equal(np_dt, truth), 'numpy dict temperature errors should have been [.01,.01,.01,.01,.01], instead read %s' % np_dt.__str__()
@@ -603,9 +626,9 @@ class TestClass():
         '''
         
         truth = [31.53,31.47,31.49,31.49,31.50]
-        s = self.demoIQuODProfile.s()
-        df_s = self.IQuODdataframe['salinity']
-        np_s = self.IQuODdictionary['s']
+        s = self.iquod1.s()
+        df_s = self.iquod1_df['salinity']
+        np_s = self.iquod1_dict['s']
         assert numpy.array_equal(s, truth), 'salinities should have been [31.53,31.47,31.49,31.49,31.50], instead read %s' % s.__str__()
         assert numpy.array_equal(df_s, truth), 'dataframe salinities should have been [31.53,31.47,31.49,31.49,31.50], instead read \n%s' % df_s.__str__()
         assert numpy.array_equal(np_s, truth), 'numpy dict salinities should have been [31.53,31.47,31.49,31.49,31.50], instead read %s' % np_s.__str__()
@@ -616,13 +639,56 @@ class TestClass():
         '''
 
         truth = [.02,.02,.02,.02,.02]
-        ds = self.demoIQuODProfile.ds()
-        df_ds = self.IQuODdataframe['dsalinity']
-        np_ds = self.IQuODdictionary['ds']
+        ds = self.iquod1.ds()
+        df_ds = self.iquod1_df['dsalinity']
+        np_ds = self.iquod1_dict['ds']
         assert numpy.array_equal(ds, truth), 'salinity errors should have been [.02,.02,.02,.02,.02], instead read %s' % ds.__str__()
         assert numpy.array_equal(df_ds, truth), 'dataframe salinity errors should have been [.02,.02,.02,.02,.02], instead read %s' % df_ds.__str__()
         assert numpy.array_equal(np_ds, truth), 'numpy dict salinity errors should have been [.02,.02,.02,.02,.02], instead read %s' % np_ds.__str__()
 
+    # metadata tests
 
+    def test_metadata(self):
+        '''
+        check correct unpacking of temperature and salinity metadata from iquod profile
+        '''
+
+        truth_t = [{'code': 3, 'value': 102.0, 'intMeta': 0}, {'code': 5, 'value': 411.0, 'intMeta': 0}]
+        truth_s = [{'code': 3, 'value': 202.0, 'intMeta': 0}, {'code': 5, 'value': 411.0, 'intMeta': 0}]
+        t_meta = self.iquod2.t_metadata()
+        s_meta = self.iquod2.s_metadata()
+        df_t_meta = self.iquod2_df.temperature_metadata
+        df_s_meta = self.iquod2_df.salinity_metadata
+        np_t_meta = self.iquod2_dict['t_metadata']
+        np_s_meta = self.iquod2_dict['s_metadata']
+
+        assert numpy.array_equal(truth_t, t_meta), "temperature metadata should have been [{'code': 3, 'value': 102.0, 'intMeta': 0}, {'code': 5, 'value': 411.0, 'intMeta': 0}], instead read %s" % t_meta.__str__()
+        assert numpy.array_equal(truth_s, s_meta), "salinity metadata should have been [{'code': 3, 'value': 202.0, 'intMeta': 0}, {'code': 5, 'value': 411.0, 'intMeta': 0}], instead read %s" % s_meta.__str__()
+        assert numpy.array_equal(truth_t, df_t_meta), "dataframe temperature metadata should have been [{'code': 3, 'value': 102.0, 'intMeta': 0}, {'code': 5, 'value': 411.0, 'intMeta': 0}], instead read %s" % df_t_meta.__str__()
+        assert numpy.array_equal(truth_s, df_s_meta), "dataframe salinity metadata should have been [{'code': 3, 'value': 202.0, 'intMeta': 0}, {'code': 5, 'value': 411.0, 'intMeta': 0}], instead read %s" % df_s_meta.__str__()
+        assert numpy.array_equal(truth_t, np_t_meta), "dict temperature metadata should have been [{'code': 3, 'value': 102.0, 'intMeta': 0}, {'code': 5, 'value': 411.0, 'intMeta': 0}], instead read %s" % np_t_meta.__str__()
+        assert numpy.array_equal(truth_s, np_s_meta), "dict salinity metadata should have been [{'code': 3, 'value': 202.0, 'intMeta': 0}, {'code': 5, 'value': 411.0, 'intMeta': 0}], instead read %s" % np_s_meta.__str__()
+
+    def test_missing_metadata(self):
+        '''
+        make sure absent metadata doesn't cause problems
+        '''
+
+        # pre-iquod format
+        t_meta = self.classic1.t_metadata()
+        s_meta = self.classic1.s_metadata()
+        assert numpy.array_equal([], t_meta), 'temperature metadata should have been [], instead read %s' % t_meta.__str__()
+        assert numpy.array_equal([], s_meta), 'salinity metadata should have been [], instead read %s' % s_meta.__str__()
+
+        # iquod format
+        t_meta = self.iquod1.t_metadata()
+        s_meta = self.iquod1.s_metadata()
+        assert numpy.array_equal([], t_meta), 'iquod temperature metadata should have been [], instead read %s' % t_meta.__str__()
+        assert numpy.array_equal([], s_meta), 'iquod salinity metadata should have been [], instead read %s' % s_meta.__str__()
+
+        # pre-iquod format, with metadata (but no intelligent metadata flag)
+        truth_t = [{'code': 5, 'value': 4.0, 'intMeta': 0}]
+        t_meta = self.classic2.t_metadata()
+        assert numpy.array_equal(truth_t, t_meta), "temperature metadata should have been [{'code': 5, 'value': 4.0, 'intMeta': 0}], instead read %s" % t_meta.__str__()
 
 
