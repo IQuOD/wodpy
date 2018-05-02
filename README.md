@@ -53,6 +53,7 @@ profile = wod.WodProfile(fid)
 profile.latitude()  # Return the latitude of the profile.
 profile.z()         # Return the depths of the observations.
 profile.df()        # Return a pandas DataFrame containing all the information for this profile
+...
 ```
 
 Further profiles in the file can be read as follows:
@@ -76,6 +77,8 @@ These functions decode data from the current profile.
 **Per-profile data:**
  - `cruise()`: Returns the cruise number.
  - `day()`: Returns the day.
+ - `dlatitude()`: uncertainty on latitude
+ - `dlongitude()`: uncertainty on longitude
  - `latitude()`: Returns the latitude of the profile.
  - `longitude()`: Returns the longitude of the profile.
  - `month()`: Returns the month.
@@ -92,17 +95,22 @@ These functions decode data from the current profile.
  - `extract_secondary_header(index)`: returns the value of the secondary header indexed by the `index` argument, where this index corresponds to the 'ID' column of table 4 in https://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf. For example, `extract_secondary_header(29)` is exactly equivalent to `probe_type()`.
 
 **Per-level data:**
+ - `ds()`: Returns a numpy masked array of salinity uncertainties
+ - `dt()`: Returns a numpy masked array of temperature uncertainties
+ - `dz()`: Returns a numpy masked array of depth uncertainties
  - `oxygen()`: Returns a numpy masked array of oxygen content (mL / L).
  - `p()`: Returns a numpy masked array of pressures (decibar).
  - `pH()`: Returns a numpy masked array of pH levels.
  - `phosphate()`: Returns a numpy masked array of phosphate content (uM / L).
  - `s()`: Returns a numpy masked array of salinity.
  - `s_level_qc(originator=False)`: Returns the quality control flag for each salinity level.
+ - `s_metadata()`: returns a list of dictionaries describing available salinity metadata
  - `s_profile_qc(originator=False)`: Returns the quality control flag for the salinity profile. 
  - `s_qc_mask()`: Returns a boolean array showing which salinity levels failed quality control. If the entire cast was rejected then all levels are set to True.
  - `silicate()`: Returns a numpy masked array of silicate content (uM / L).
  - `t()`: Returns a numpy masked array of temperatures (C).
  - `t_level_qc(originator=False)`: Returns the quality control flag for each temperature level.
+ - `t_metadata()`: returns a list of dictionaries describing available temperature metadata
  - `t_profile_qc(originator=False)`: Returns the quality control flag for the temperature profile.
  - `t_qc_mask()`: Returns a boolean array showing which temperature levels failed quality control. If the entire cast was rejected then all levels are set to True.
  - `z()`: Returns a numpy masked array of depths. 
@@ -118,6 +126,9 @@ Constructing the per-level `ndarrays` should not be done more than once per prof
 **Columns:**
  - `depth`: level depths in meters
  - `depth_qc`: level depth qc flags (0 == all good)
+ - `ddepth`: depth uncertainty
+ - `dsalinity`: salinity uncertainty
+ - `dtemperature`: temperature uncertainty
  - `oxygen`: oxygen content (mL / L)
  - `pressure`: pressure (decibar)
  - `pH`: pH levels
@@ -132,11 +143,15 @@ Constructing the per-level `ndarrays` should not be done more than once per prof
 **Attributes:**
  - `cruise`: cruise ID number
  - `day`: of the month on [1, 31]
+ - `dlatitude`: uncertainty on latitude
+ - `dlongitude`: uncertainty on longitude
  - `latitude`: in degrees
  - `longitude`: in degrees
  - `month`: of the year on [1, 12]
  - `n_levels`: number of levels in profile (ie number of rows in dataframe)
  - `probe_type`: The contents of secondary header 29 if it exists, otherwise None.
+ - `salinity_metadata`: list of dicts describing available salinity metadata
+ - `temperature_metadata`: list of dicts describing available temperature metadata
  - `time`: in hours on the range [0, 24)
  - `uid`: unique identifier of profile
  - `year`
