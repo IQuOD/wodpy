@@ -9,7 +9,7 @@ class TestClass():
 
         #create an artificial profile to trigger the temperature flag
         #sets first temperature to 99.9; otherwise identical to data/example.dat
-        file = open("tests/testData/example.dat")
+        file = open("tests/testData/classic.dat")
 
         self.demoProfile = Wod4CoTeDe(file)
         return
