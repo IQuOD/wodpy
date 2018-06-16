@@ -164,7 +164,7 @@ class WodProfile(object):
                 ['Significant digits',     1, int],
                 ['Total digits',           1, int],
                 ['Precision',              1, int],
-                ['dLatitude',              0, float], 
+                ['Latitude_unc',           0, float], 
             ]
 
             n = prhFormat.index(['Longitude', 0, float]) + 1
@@ -172,7 +172,7 @@ class WodProfile(object):
                 ['Significant digits',     1, int],
                 ['Total digits',           1, int],
                 ['Precision',              1, int],
-                ['dLongitude',             0, float], 
+                ['Longitude_unc',          0, float], 
             ]
 
         varFormat = [['Bytes in next field',    1, int],
@@ -189,7 +189,7 @@ class WodProfile(object):
                      ['Value',                  0, float]]
 
         if self.IQuOD:
-            metFormat.append(['intMeta', 1, int])
+            metFormat.append(['iMeta', 1, int])
 
         primary_header = {}
 
@@ -265,7 +265,7 @@ class WodProfile(object):
                    ['Value',                          0, float]]
 
         if not bio and self.IQuOD:
-            format3.append(['intMeta', 1, int])
+            format3.append(['iMeta', 1, int])
 
         self._interpret_data(fid, format1, header)
         if 'Total bytes' in header:
@@ -335,14 +335,14 @@ class WodProfile(object):
                 ['Significant digits',     1, int],
                 ['Total digits',           1, int],
                 ['Precision',              1, int],
-                ['dDepth',               0, float] 
+                ['depth_unc',              0, float] 
             ]
 
             vFormat2 += [
                 ['Significant digits',     1, int],
                 ['Total digits',           1, int],
                 ['Precision',              1, int],
-                ['dValue',               0, float] 
+                ['Value_unc',              0, float] 
             ]
         
         data = []
@@ -358,10 +358,10 @@ class WodProfile(object):
                 continue
             self._interpret_data(fid, copy.deepcopy(dFormat2), data[i])
             # flag missing depth error values
-            if 'dDepth' in data[i] and data[i]['dDepth'] is not None:
-                data[i]['dMissing'] = False
+            if 'depth_unc' in data[i] and data[i]['depth_unc'] is not None:
+                data[i]['Missing_unc'] = False
             else:
-                data[i]['dMissing'] = True
+                data[i]['Missing_unc'] = True
             # extract variables
             data[i]['variables'] = []
             for j in range(self.primary_header['Number of variables']):
@@ -372,10 +372,10 @@ class WodProfile(object):
                     data[i]['variables'][j]['Missing'] = False
                     self._interpret_data(fid, copy.deepcopy(vFormat2), data[i]['variables'][j])
                     # flag missing error values
-                    if 'dValue' in data[i]['variables'][j] and data[i]['variables'][j]['dValue'] is not None:
-                        data[i]['variables'][j]['dMissing'] = False
+                    if 'Value_unc' in data[i]['variables'][j] and data[i]['variables'][j]['Value_unc'] is not None:
+                        data[i]['variables'][j]['Missing_unc'] = False
                     else:
-                        data[i]['variables'][j]['dMissing'] = True
+                        data[i]['variables'][j]['Missing_unc'] = True
                 else:
                     data[i]['variables'][j]['Missing'] = True
 
@@ -419,10 +419,10 @@ class WodProfile(object):
         """ Returns the latitude of the profile. """
         return self.primary_header['Latitude']
 
-    def dlatitude(self):
+    def latitude_unc(self):
         """ Returns the error on the latitude, if available"""
-        if 'dLatitude' in self.primary_header:
-            return self.primary_header['dLatitude']
+        if 'Latitude_unc' in self.primary_header:
+            return self.primary_header['Latitude_unc']
         else:
             return None
 
@@ -430,10 +430,10 @@ class WodProfile(object):
         """ Returns the longitude of the profile. """
         return self.primary_header['Longitude']
 
-    def dlongitude(self):
+    def longitude_unc(self):
         """ Returns the error on the longitude, if available"""
-        if 'dLongitude' in self.primary_header:
-            return self.primary_header['dLongitude']
+        if 'Longitude_unc' in self.primary_header:
+            return self.primary_header['Longitude_unc']
         else:
             return None
 
@@ -547,12 +547,12 @@ class WodProfile(object):
             data[i] = self.profile_data[i]['Depth']
         return data
 
-    def dz(self):
+    def z_unc(self):
         """Returns a numpy array of depth errors, if available"""
         data = np.ma.array(np.zeros(self.n_levels()), mask=True)
         for i in range(self.n_levels()):
-            if self.profile_data[i]['dMissing']: continue
-            data[i] = self.profile_data[i]['dDepth']
+            if self.profile_data[i]['Missing_unc']: continue
+            data[i] = self.profile_data[i]['depth_unc']
         return data        
 
     def z_level_qc(self, originator=False):
@@ -592,13 +592,13 @@ class WodProfile(object):
                 data[i] = self.profile_data[i]['variables'][index]['Value']
         return data
 
-    def dvar_data(self, index):
+    def var_data_unc(self, index):
         """ Returns the errors on data values for a variable given the variable index. """
         data = np.ma.array(np.zeros(self.n_levels()), mask=True)
         if index is not None:
             for i in range(self.n_levels()):
-                if self.profile_data[i]['variables'][index]['Missing'] or self.profile_data[i]['variables'][index]['dMissing']: continue
-                data[i] = self.profile_data[i]['variables'][index]['dValue']
+                if self.profile_data[i]['variables'][index]['Missing'] or self.profile_data[i]['variables'][index]['Missing_unc']: continue
+                data[i] = self.profile_data[i]['variables'][index]['Value_unc']
         return data
 
     def var_metadata(self, index):
@@ -610,10 +610,10 @@ class WodProfile(object):
                     'value': m['Value'] / 10**m['Value precision'],
                     'code': m['Variable-specific code'],
                 }
-                if 'intMeta' in m:
-                    meta['intMeta'] = m['intMeta']
+                if 'iMeta' in m:
+                    meta['iMeta'] = m['iMeta']
                 else:
-                    meta['intMeta'] = 0
+                    meta['iMeta'] = 0
                 metadata.append(meta)
             return metadata
         else:
@@ -660,10 +660,10 @@ class WodProfile(object):
         index = self.var_index()
         return self.var_data(index)
 
-    def dt(self):
+    def t_unc(self):
         """Returns a numpy array of temperature errors, if available"""
         index = self.var_index()
-        return self.dvar_data(index)  
+        return self.var_data_unc(index)  
 
     def t_qc_mask(self):
         """ Returns a boolean array showing which temperature
@@ -692,10 +692,10 @@ class WodProfile(object):
         index = self.var_index(s=True)
         return self.var_data(index)
 
-    def ds(self):
+    def s_unc(self):
         """ Returns a numpy masked array of salinity errors, if available. """
         index = self.var_index(s=True)
-        return self.dvar_data(index)
+        return self.var_data_unc(index)
 
     def s_qc_mask(self):
         """ Returns a boolean array showing which salinity
@@ -753,13 +753,13 @@ class WodProfile(object):
         columns = {
             "depth": self.z(),
             "depth_qc": self.z_level_qc(),
-            "ddepth": self.dz(),
+            "depth_unc": self.z_unc(),
             "temperature": self.t(),
             "temperature_qc_flag": self.t_level_qc(),
-            "dtemperature": self.dt(),
+            "temperature_unc": self.t_unc(),
             "salinity": self.s(),
             "salinity_qc_flag": self.s_level_qc(),
-            "dsalinity": self.ds(),
+            "salinity_unc": self.s_unc(),
             "oxygen": self.oxygen(),
             "phosphate": self.phosphate(),
             "silicate": self.silicate(),
@@ -769,25 +769,27 @@ class WodProfile(object):
 
         df = pd.DataFrame(columns)
 
-        # record profile data as attributes on the dataframe object
-        df.latitude = self.latitude()
-        df.dlatitude = self.dlatitude()
-        df.longitude = self.longitude()
-        df.dlongitude = self.dlongitude()
-        df.uid = self.uid()
-        df.n_levels = self.n_levels()
-        df.year = self.year()
-        df.month = self.month()
-        df.day = self.day()
-        df.time = self.time()
-        df.cruise = self.cruise()
-        df.probe_type = self.probe_type()
-        df.originator_flag_type = self.originator_flag_type()
-        df.PIs = self.PIs()
-        df.originator_station = self.originator_station()
-        df.originator_cruise = self.originator_cruise()
-        df.temperature_metadata = self.t_metadata()
-        df.salinity_metadata = self.s_metadata()
+        # record profile data in a metadata object on the dataframe
+        meta = {}
+        meta["latitude"] = self.latitude()
+        meta["latitude_unc"] = self.latitude_unc()
+        meta["longitude"] = self.longitude()
+        meta["longitude_unc"] = self.longitude_unc()
+        meta["uid"] = self.uid()
+        meta["n_levels"] = self.n_levels()
+        meta["year"] = self.year()
+        meta["month"] = self.month()
+        meta["day"] = self.day()
+        meta["time"] = self.time()
+        meta["cruise"] = self.cruise()
+        meta["probe_type"] = self.probe_type()
+        meta["originator_flag_type"] = self.originator_flag_type()
+        meta["PIs"] = self.PIs()
+        meta["originator_station"] = self.originator_station()
+        meta["originator_cruise"] = self.originator_cruise()
+        meta["temperature_metadata"] = self.t_metadata()
+        meta["salinity_metadata"] = self.s_metadata()
+        df.meta = meta
 
         return df
 
@@ -803,9 +805,9 @@ class WodProfile(object):
         d['cruise'] = self.cruise()
         d['day'] = self.day()
         d['latitude'] = self.latitude()
-        d['dlatitude'] = self.dlatitude()
+        d['latitude_unc'] = self.latitude_unc()
         d['longitude'] = self.longitude()
-        d['dlongitude'] = self.dlongitude()
+        d['longitude_unc'] = self.longitude_unc()
         d['month'] = self.month()
         d['n_levels'] = self.n_levels()
         d['primary_header_keys'] = self.primary_header_keys()
@@ -821,17 +823,17 @@ class WodProfile(object):
         d['s_metadata'] = self.s_metadata()
         # per level
         d['s'] = self.s()
-        d['ds'] = self.ds()
+        d['s_unc'] = self.s_unc()
         d['s_level_qc'] = self.s_level_qc()
         d['s_profile_qc'] = self.s_profile_qc()
         d['s_qc_mask'] = self.s_qc_mask()
         d['t'] = self.t()
-        d['dt'] = self.dt()
+        d['t_unc'] = self.t_unc()
         d['t_level_qc'] = self.t_level_qc()
         d['t_profile_qc'] = self.t_profile_qc()
         d['t_qc_mask'] = self.t_qc_mask()
         d['z'] = self.z()
-        d['dz'] = self.dz()
+        d['z_unc'] = self.z_unc()
         d['z_level_qc'] = self.z_level_qc()
         d['oxygen'] = self.oxygen()
         d['phosphate'] = self.phosphate()
@@ -846,9 +848,9 @@ class WodProfile(object):
 
         data = {}
         data['latitude'] = self.latitude()
-        data['dlatitude'] = self.dlatitude()
+        data['latitude_unc'] = self.latitude_unc()
         data['longitude'] = self.longitude()
-        data['dlongitude'] = self.dlongitude()
+        data['longitude_unc'] = self.longitude_unc()
         data['uid'] = self.uid()
         data['n_levels'] = self.n_levels()
         data['year'] = self.year()
