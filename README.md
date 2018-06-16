@@ -77,8 +77,8 @@ These functions decode data from the current profile.
 **Per-profile data:**
  - `cruise()`: Returns the cruise number.
  - `day()`: Returns the day.
- - `dlatitude()`: uncertainty on latitude
- - `dlongitude()`: uncertainty on longitude
+ - `latitude_unc()`: uncertainty on latitude
+ - `longitude_unc()`: uncertainty on longitude
  - `latitude()`: Returns the latitude of the profile.
  - `longitude()`: Returns the longitude of the profile.
  - `month()`: Returns the month.
@@ -95,9 +95,9 @@ These functions decode data from the current profile.
  - `extract_secondary_header(index)`: returns the value of the secondary header indexed by the `index` argument, where this index corresponds to the 'ID' column of table 4 in https://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf. For example, `extract_secondary_header(29)` is exactly equivalent to `probe_type()`.
 
 **Per-level data:**
- - `ds()`: Returns a numpy masked array of salinity uncertainties
- - `dt()`: Returns a numpy masked array of temperature uncertainties
- - `dz()`: Returns a numpy masked array of depth uncertainties
+ - `s_unc()`: Returns a numpy masked array of salinity uncertainties
+ - `t_unc()`: Returns a numpy masked array of temperature uncertainties
+ - `z_unc()`: Returns a numpy masked array of depth uncertainties
  - `oxygen()`: Returns a numpy masked array of oxygen content (mL / L).
  - `p()`: Returns a numpy masked array of pressures (decibar).
  - `pH()`: Returns a numpy masked array of pH levels.
@@ -121,44 +121,46 @@ Constructing the per-level `ndarrays` should not be done more than once per prof
 
 ##### pandas
 
-`profile.df()` returns a pandas `DataFrame`, with per-level information as columns and per-profile information as attributes:
+`profile.df()` returns a pandas `DataFrame`, with per-level information as columns and per-profile information as keys in a `.meta` attribute:
 
 **Columns:**
- - `depth`: level depths in meters
- - `depth_qc`: level depth qc flags (0 == all good)
- - `ddepth`: depth uncertainty
- - `dsalinity`: salinity uncertainty
- - `dtemperature`: temperature uncertainty
  - `oxygen`: oxygen content (mL / L)
- - `pressure`: pressure (decibar)
+ - `p`: pressure (decibar)
  - `pH`: pH levels
  - `phosphate`: phosphate content (uM / L)
- - `salinity`: level salinities
- - `salinity_qc_flag`: level salinity qc flags (0 == all good)
  - `silicate`: silicate content (uM / L)
- - `temperature`: level temperature in Celcius
- - `temperature_qc_flag`: level temperature qc flags (0 == all good)
-
+ - `t`: level temperature in Celcius
+ - `t_level_qc`: level temperature qc flags (0 == all good)
+ - `t_unc`: temperature uncertainty
+ - `s`: level salinities
+ - `s_level_qc`: level salinity qc flags (0 == all good)
+ - `s_unc`: salinity uncertainty
+ - `z`: level depths in meters
+ - `z_level_qc`: level depth qc flags (0 == all good)
+ - `z_unc`: depth uncertainty
 
 **Attributes:**
+
+The following are keys in a `.meta` dictionary on the dataframe:
+
  - `cruise`: cruise ID number
  - `day`: of the month on [1, 31]
- - `dlatitude`: uncertainty on latitude
- - `dlongitude`: uncertainty on longitude
+ - `latitude_unc`: uncertainty on latitude
+ - `longitude_unc`: uncertainty on longitude
  - `latitude`: in degrees
  - `longitude`: in degrees
  - `month`: of the year on [1, 12]
  - `n_levels`: number of levels in profile (ie number of rows in dataframe)
- - `probe_type`: The contents of secondary header 29 if it exists, otherwise None.
- - `salinity_metadata`: list of dicts describing available salinity metadata
- - `temperature_metadata`: list of dicts describing available temperature metadata
- - `time`: in hours on the range [0, 24)
- - `uid`: unique identifier of profile
- - `year`
- - `PIs`
  - `originator_station`
  - `originator_cruise`
  - `originator_flag_type`
+ - `PIs`
+ - `probe_type`: The contents of secondary header 29 if it exists, otherwise None.
+ - `s_metadata`: list of dicts describing available salinity metadata
+ - `t_metadata`: list of dicts describing available temperature metadata
+ - `time`: in hours on the range [0, 24)
+ - `uid`: unique identifier of profile
+ - `year`
 
  Note that `DataFrame` attributes generally do not propagate to new `DataFrames` returned by operating on original `DataFrame`s.
 

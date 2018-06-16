@@ -751,20 +751,20 @@ class WodProfile(object):
 
         # populate dataframe with level data
         columns = {
-            "depth": self.z(),
-            "depth_qc": self.z_level_qc(),
-            "depth_unc": self.z_unc(),
-            "temperature": self.t(),
-            "temperature_qc_flag": self.t_level_qc(),
-            "temperature_unc": self.t_unc(),
-            "salinity": self.s(),
-            "salinity_qc_flag": self.s_level_qc(),
-            "salinity_unc": self.s_unc(),
+            "z": self.z(),
+            "z_level_qc": self.z_level_qc(),
+            "z_unc": self.z_unc(),
+            "t": self.t(),
+            "t_level_qc": self.t_level_qc(),
+            "t_unc": self.t_unc(),
+            "s": self.s(),
+            "s_level_qc": self.s_level_qc(),
+            "s_unc": self.s_unc(),
             "oxygen": self.oxygen(),
             "phosphate": self.phosphate(),
             "silicate": self.silicate(),
             "pH": self.pH(),
-            "pressure": self.p()
+            "p": self.p()
         }
 
         df = pd.DataFrame(columns)
@@ -787,8 +787,8 @@ class WodProfile(object):
         meta["PIs"] = self.PIs()
         meta["originator_station"] = self.originator_station()
         meta["originator_cruise"] = self.originator_cruise()
-        meta["temperature_metadata"] = self.t_metadata()
-        meta["salinity_metadata"] = self.s_metadata()
+        meta["t_metadata"] = self.t_metadata()
+        meta["s_metadata"] = self.s_metadata()
         df.meta = meta
 
         return df

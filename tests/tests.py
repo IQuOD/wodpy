@@ -213,7 +213,7 @@ class TestClass():
 
         truth = [0.0, 10.0, 25.0, 50.0]
         z = self.classic1.z()
-        df_z = self.classic1_df['depth']
+        df_z = self.classic1_df['z']
         np_z = self.classic1_dict['z']
         assert numpy.array_equal(z, truth), 'depths should have been [0, 10, 25, 50], instead read %s' % z.__str__()
         assert numpy.array_equal(df_z, truth), 'dataframe depths should have been [0, 10, 25, 50], instead read %s' % df_z.tolist().__str__()
@@ -227,7 +227,7 @@ class TestClass():
         truth = numpy.ma.MaskedArray([0,0,0,0], [True, True, True, True])
         dftruth = pandas.Series(numpy.nan, index=[0,1,2,3])
         z_unc = self.classic1.z_unc()
-        df_z_unc = self.classic1_df['depth_unc']
+        df_z_unc = self.classic1_df['z_unc']
         np_z_unc = self.classic1_dict['z_unc']
         assert numpy.array_equal(z_unc, truth), 'depth errors should have been all masked, instead read %s' % z_unc.__str__()
         assert df_z_unc.equals(dftruth), 'dataframe depth errors should have been all masked, instead read %s' % df_z_unc.__str__()
@@ -240,7 +240,7 @@ class TestClass():
 
         truth = [8.960, 8.950, 0.900, -1.230]
         t = self.classic1.t()
-        df_t = self.classic1_df['temperature']
+        df_t = self.classic1_df['t']
         np_t = self.classic1_dict['t']
         assert numpy.array_equal(t, truth), 'temperatures should have been [8.96, 8.95, 0.9, -1.23], instead read %s' % t.__str__()
         assert numpy.array_equal(df_t, truth), 'dataframe temperatures should have been [8.96, 8.95, 0.9, -1.23], instead read \n%s' % df_t.__str__()
@@ -254,7 +254,7 @@ class TestClass():
         truth = numpy.ma.MaskedArray([0,0,0,0], [True, True, True, True])
         dftruth = pandas.Series(numpy.nan, index=[0,1,2,3])
         t_unc = self.classic1.t_unc()
-        df_t_unc = self.classic1_df['temperature_unc']
+        df_t_unc = self.classic1_df['t_unc']
         np_t_unc = self.classic1_dict['t_unc']
    
         assert numpy.array_equal(t_unc, truth), 'temperature errors should have been all masked, instead read %s' % t_unc.__str__()
@@ -269,7 +269,7 @@ class TestClass():
         
         truth = [30.900, 30.900, 31.910, 32.410]
         s = self.classic1.s()
-        df_s = self.classic1_df['salinity']
+        df_s = self.classic1_df['s']
         np_s = self.classic1_dict['s']
         assert numpy.array_equal(s, truth), 'salinities should have been [30.9, 30.9, 31.91, 32.41], instead read %s' % s.__str__()
         assert numpy.array_equal(df_s, truth), 'dataframe salinities should have been [30.9, 30.9, 31.91, 32.41], instead read \n%s' % df_s.__str__()
@@ -283,7 +283,7 @@ class TestClass():
         truth = numpy.ma.MaskedArray([0,0,0,0], [True, True, True, True])
         dftruth = pandas.Series(numpy.nan, index=[0,1,2,3])
         s_unc = self.classic1.s_unc()
-        df_s_unc = self.classic1_df['salinity_unc']
+        df_s_unc = self.classic1_df['s_unc']
         np_s_unc = self.classic1_dict['s_unc']
    
         assert numpy.array_equal(s_unc, truth), 'salinity errors should have been all masked, instead read %s' % s_unc.__str__()
@@ -571,7 +571,7 @@ class TestClass():
 
         truth = [0,2,5,10,20]
         z = self.iquod1.z()
-        df_z = self.iquod1_df['depth']
+        df_z = self.iquod1_df['z']
         np_z = self.iquod1_dict['z']
         assert numpy.array_equal(z, truth), 'depths should have been [0,2,5,10,20], instead read %s' % z.__str__()
         assert numpy.array_equal(df_z, truth), 'dataframe depths should have been [0,2,5,10,20], instead read %s' % df_z.tolist().__str__()
@@ -584,7 +584,7 @@ class TestClass():
 
         truth = [0,.0016,.004,.008,.016]
         z_unc = self.iquod1.z_unc()
-        df_z_unc = self.iquod1_df['depth_unc']
+        df_z_unc = self.iquod1_df['z_unc']
         np_z_unc = self.iquod1_dict['z_unc']
         assert numpy.array_equal(z_unc, truth), 'depth errors should have been [0,.0016,.004,.008,.016], instead read %s' % z_unc.__str__()
         assert numpy.array_equal(df_z_unc, truth), 'dataframe depth errors should have been [0,.0016,.004,.008,.016], instead read %s' % df_z_unc.__str__()
@@ -597,7 +597,7 @@ class TestClass():
 
         truth = [11.1,11.2,11.0,11.0,11.0]
         t = self.iquod1.t()
-        df_t = self.iquod1_df['temperature']
+        df_t = self.iquod1_df['t']
         np_t = self.iquod1_dict['t']
         assert numpy.array_equal(t, truth), 'temperatures should have been [11.1,11.2,11.0,11.0,11.0], instead read %s' % t.__str__()
         assert numpy.array_equal(df_t, truth), 'dataframe temperatures should have been [11.1,11.2,11.0,11.0,11.0], instead read \n%s' % df_t.__str__()
@@ -610,7 +610,7 @@ class TestClass():
 
         truth = [.01,.01,.01,.01,.01]
         t_unc = self.iquod1.t_unc()
-        df_t_unc = self.iquod1_df['temperature_unc']
+        df_t_unc = self.iquod1_df['t_unc']
         np_t_unc = self.iquod1_dict['t_unc']
         assert numpy.array_equal(t_unc, truth), 'temperature errors should have been [.01,.01,.01,.01,.01], instead read %s' % t_unc.__str__()
         assert numpy.array_equal(df_t_unc, truth), 'dataframe temperature errors should have been [.01,.01,.01,.01,.01], instead read %s' % df_t_unc.__str__()
@@ -623,7 +623,7 @@ class TestClass():
         
         truth = [31.53,31.47,31.49,31.49,31.50]
         s = self.iquod1.s()
-        df_s = self.iquod1_df['salinity']
+        df_s = self.iquod1_df['s']
         np_s = self.iquod1_dict['s']
         assert numpy.array_equal(s, truth), 'salinities should have been [31.53,31.47,31.49,31.49,31.50], instead read %s' % s.__str__()
         assert numpy.array_equal(df_s, truth), 'dataframe salinities should have been [31.53,31.47,31.49,31.49,31.50], instead read \n%s' % df_s.__str__()
@@ -636,7 +636,7 @@ class TestClass():
 
         truth = [.02,.02,.02,.02,.02]
         s_unc = self.iquod1.s_unc()
-        df_s_unc = self.iquod1_df['salinity_unc']
+        df_s_unc = self.iquod1_df['s_unc']
         np_s_unc = self.iquod1_dict['s_unc']
         assert numpy.array_equal(s_unc, truth), 'salinity errors should have been [.02,.02,.02,.02,.02], instead read %s' % s_unc.__str__()
         assert numpy.array_equal(df_s_unc, truth), 'dataframe salinity errors should have been [.02,.02,.02,.02,.02], instead read %s' % df_s_unc.__str__()
@@ -653,8 +653,8 @@ class TestClass():
         truth_s = [{'code': 3, 'value': 202.0, 'iMeta': 0}, {'code': 5, 'value': 411.0, 'iMeta': 0}]
         t_meta = self.iquod2.t_metadata()
         s_meta = self.iquod2.s_metadata()
-        df_t_meta = self.iquod2_df.meta['temperature_metadata']
-        df_s_meta = self.iquod2_df.meta['salinity_metadata']
+        df_t_meta = self.iquod2_df.meta['t_metadata']
+        df_s_meta = self.iquod2_df.meta['s_metadata']
         np_t_meta = self.iquod2_dict['t_metadata']
         np_s_meta = self.iquod2_dict['s_metadata']
 
