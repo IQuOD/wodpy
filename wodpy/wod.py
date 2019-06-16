@@ -646,7 +646,7 @@ class WodProfile(object):
             a missing value)."""
         data = np.ma.array(np.zeros(self.n_levels()), mask=False, dtype=bool)
         prof = self.var_profile_qc(index)
-        if prof > 0:
+        if prof is not None and prof > 0:
             data[:] = True
         else:
             zqc = self.z_level_qc()
