@@ -26,6 +26,13 @@ class TestClass():
         self.iquod2 = wod.WodProfile(iquod)
         self.iquod2_df = self.iquod2.df()
         self.iquod2_dict = self.iquod2.npdict()
+
+        # data with some interesting pathologies
+        path = open("tests/testData/pathological.dat")
+        self.path1 = wod.WodProfile(path)
+        self.path1_df = self.path1.df()
+        self.path1_dict = self.path1.npdict()
+        self.path1_head = self.path1.header()
     
         return
 
