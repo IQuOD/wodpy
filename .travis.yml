@@ -10,5 +10,5 @@ before_install:
 - docker pull continuumio/anaconda3
 
 script:
-- docker run -v $PWD:/wodpy_latest continuumio/anaconda /bin/bash -c "cd /wodpy_latest; /opt/conda/bin/nosetests tests/*.py"
-- docker run -v $PWD:/wodpy_latest continuumio/anaconda3 /bin/bash -c "cd /wodpy_latest; /opt/conda/bin/nosetests tests/*.py"
+- docker container run -v $PWD:/wodpy_latest -e PATH=/opt/conda/bin continuumio/anaconda /bin/bash -c "cd /wodpy_latest; pip install -r requirements.txt; /opt/conda/bin/nosetests tests/*.py"
+- docker container run -v $PWD:/wodpy_latest -e PATH=/opt/conda/bin continuumio/anaconda3 /bin/bash -c "cd /wodpy_latest; pip install -r requirements.txt; /opt/conda/bin/nosetests tests/*.py"
