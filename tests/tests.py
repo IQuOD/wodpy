@@ -103,7 +103,7 @@ class TestClass():
 
     def test_uid(self):
         '''
-        check cruise ID == 67064
+        check profile ID == 67064
         '''
 
         uid = self.classic1.uid()
