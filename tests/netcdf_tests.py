@@ -63,7 +63,6 @@ class TestClass():
         month = self.classic1.month() 
         assert month == 8, 'month should have been 8, instead read %f' % month
 
-
     def test_day(self):
         '''
         check day == 7
@@ -95,6 +94,7 @@ class TestClass():
         '''
 
         truth = [0.0, 10.0, 25.0, 50.0]
+        truth = [numpy.float32(t) for t in truth]
         z = self.classic1.z()
         assert numpy.array_equal(z, truth), 'depths should have been [0, 10, 25, 50], instead read %s' % z.__str__()
 
@@ -113,7 +113,7 @@ class TestClass():
         '''
 
         truth = [8.960, 8.950, 0.900, -1.230]
-        #truth = [numpy.float32(t) for t in truth] # makes the test pass, but why isn't this necessary in z?
+        truth = [numpy.float32(t) for t in truth]
         t = self.classic1.t()
         assert numpy.array_equal(t, truth), 'temperatures should have been [8.96, 8.95, 0.9, -1.23], instead read %s' % t.__str__()
 
@@ -127,56 +127,52 @@ class TestClass():
         assert numpy.array_equal(t_unc, truth), 'temperature errors should have been [0.02,0.02,0.02,0.02], instead read %s' % t_unc.__str__()
 
 
-    # def test_salinity(self):
-    #     '''
-    #     check salinities == [30.900, 30.900, 31.910, 32.410]
-    #     '''
+    def test_salinity(self):
+        '''
+        check salinities == [30.900, 30.900, 31.910, 32.410]
+        '''
         
-    #     truth = [30.900, 30.900, 31.910, 32.410]
-    #     s = self.classic1.s()
-    #     assert numpy.array_equal(s, truth), 'salinities should have been [30.9, 30.9, 31.91, 32.41], instead read %s' % s.__str__()
+        truth = [30.900, 30.900, 31.910, 32.410]
+        truth = [numpy.float32(t) for t in truth]
+        s = self.classic1.s()
+        assert numpy.array_equal(s, truth), 'salinities should have been [30.9, 30.9, 31.91, 32.41], instead read %s' % s.__str__()
 
-    # def test_salinity_error(self):
-    #     '''
-    #     check salinity errors == [--,--,--,--] (all masked)
-    #     '''
+    def test_oxygen(self):
+        '''
+        check oxygen levels = [6.750, 6.700, 8.620, 7.280]
+        '''
 
-    #     truth = numpy.ma.MaskedArray([0,0,0,0], [True, True, True, True])
-    #     s_unc = self.classic1.s_unc()
-    #     assert numpy.array_equal(s_unc, truth), 'salinity errors should have been all masked, instead read %s' % s_unc.__str__()
+        truth = [6.750, 6.700, 8.620, 7.280]
+        truth = [numpy.float32(t) for t in truth]
+        o2 = self.classic1.oxygen()
+        assert numpy.array_equal(o2, truth), 'oxygen levels should have been [6.750, 6.700, 8.620, 7.280], instead read %s' % o2.__str__()
 
-    # def test_oxygen(self):
-    #     '''
-    #     check oxygen levels = [6.750, 6.700, 8.620, 7.280]
-    #     '''
+    def test_phosphate(self):
+        '''
+        check phosphate levels = [0.650, 0.710, 0.900, 1.170]
+        '''
 
-    #     truth = [6.750, 6.700, 8.620, 7.280]
-    #     o2 = self.classic1.oxygen()
-    #     assert numpy.array_equal(o2, truth), 'oxygen levels should have been [6.750, 6.700, 8.620, 7.280], instead read %s' % o2.__str__()
+        truth = [0.650, 0.710, 0.900, 1.170]
+        truth = [numpy.float32(t) for t in truth]
+        phos = self.classic1.phosphate()
+        assert numpy.array_equal(phos, truth), 'phosphate levels should have been [0.650, 0.710, 0.900, 1.170], instead read %s' % phos.__str__()
 
-    # def test_phosphate(self):
-    #     '''
-    #     check phosphate levels = [0.650, 0.710, 0.900, 1.170]
-    #     '''
+    def test_silicate(self):
+        '''
+        check silicate levels = [20.500, 12.300, 15.400, 25.600]
+        '''
 
-    #     truth = [0.650, 0.710, 0.900, 1.170]
-    #     phos = self.classic1.phosphate()
-    #     assert numpy.array_equal(phos, truth), 'phosphate levels should have been [0.650, 0.710, 0.900, 1.170], instead read %s' % phos.__str__()
+        truth = [20.500, 12.300, 15.400, 25.600]
+        truth = [numpy.float32(t) for t in truth]
+        sili = self.classic1.silicate()
+        assert numpy.array_equal(sili, truth), 'silicate levels should have been [20.500, 12.300, 15.400, 25.600], instead read %s' % sili.__str__()
 
-    # def test_silicate(self):
-    #     '''
-    #     check silicate levels = [20.500, 12.300, 15.400, 25.600]
-    #     '''
-
-    #     truth = [20.500, 12.300, 15.400, 25.600]
-    #     sili = self.classic1.silicate()
-    #     assert numpy.array_equal(sili, truth), 'silicate levels should have been [20.500, 12.300, 15.400, 25.600], instead read %s' % sili.__str__()
-
-    # def test_pH(self):
-    #     '''
-    #     check pH levels = [8.100, 8.100, 8.100, 8.050]
-    #     '''
-
-    #     truth = [8.100, 8.100, 8.100, 8.050]
-    #     pH = self.classic1.pH()
-    #     assert numpy.array_equal(pH, truth), 'pH levels should have been [8.100, 8.100, 8.100, 8.050], instead read %s' % pH.__str__()
+    def test_pH(self):
+        '''
+        check pH levels = [8.100, 8.100, 8.100, 8.050]
+        ''' 
+    
+        truth = [8.100, 8.100, 8.100, 8.050]
+        truth = [numpy.float32(t) for t in truth]
+        pH = self.classic1.pH()
+        assert numpy.array_equal(pH, truth), 'pH levels should have been [8.100, 8.100, 8.100, 8.050], instead read %s' % pH.__str__()
