@@ -136,20 +136,36 @@ class Profile():
     def var_index(self, code=1, s=False):
         return None
 
-    def var_data(self, index):
-        return None
+    def var_data(self, v):
+        '''
+        generic variable extractor. examples of v:
+        'Temperature', 'Salinity', 'Oxygen', 'Phosphate', 'Silicate', 'pH', ...
+        '''
 
-    def var_data_unc(self, index):
-        return None
+        offset = self.determine_offset(v+'_row_size')
+        ntemps = self.r.variables()[v+'_row_size'][self.i].item()
+        return self.r.variables()[v][offset:offset + ntemps]
+
+    def var_data_unc(self, v):
+        offset = self.determine_offset(v+'_row_size')
+        ntemps = self.r.variables()[v+'_row_size'][self.i].item()
+        return self.r.variables()[v+'_uncertainty'][offset:offset + ntemps]
 
     def var_metadata(self, index):
         return None
 
-    def var_level_qc(self, index, originator=False):
-        return None
+    def var_level_qc(self, v, flagtype='IQuOD'):
+        if flagtype == 'IQuOD':
+            flag = 'Temperature_IQUODflag'
+        elif flagtype == 'WOD':
+            flag = 'Temperature_WODflag'
 
-    def var_profile_qc(self, index, originator=False):
-        return None
+        offset = self.determine_offset(v+'_row_size')
+        ntemps = self.r.variables()[v+'_row_size'][self.i].item()
+        return self.r.variables()[flag][offset:offset + ntemps]
+
+    def var_profile_qc(self, v):
+        return self.r.variables()[v+'_WODprofileflag'][self.i].item()
 
     def var_qc_mask(self, index):
         return None
@@ -173,39 +189,11 @@ class Profile():
         offset = self.determine_offset('z_row_size')
         return self.r.variables()[flag][offset:offset + self.n_levels()]
 
-    def var(self, v):
-        '''
-        generic variable extractor. examples of v:
-        'Temperature', 'Salinity', 'Oxygen', 'Phosphate', 'Silicate', 'pH', ...
-        '''
-
-        offset = self.determine_offset(v+'_row_size')
-        ntemps = self.r.variables()[v+'_row_size'][self.i].item()
-        return self.r.variables()[v][offset:offset + ntemps]
-
-    def var_unc(self, v):
-        offset = self.determine_offset(v+'_row_size')
-        ntemps = self.r.variables()[v+'_row_size'][self.i].item()
-        return self.r.variables()[v+'_uncertainty'][offset:offset + ntemps]
-
-    def var_level_qc(self, v, flagtype='IQuOD'):
-        if flagtype == 'IQuOD':
-            flag = 'Temperature_IQUODflag'
-        elif flagtype == 'WOD':
-            flag = 'Temperature_WODflag'
-
-        offset = self.determine_offset(v+'_row_size')
-        ntemps = self.r.variables()[v+'_row_size'][self.i].item()
-        return self.r.variables()[flag][offset:offset + ntemps]
-
-    def var_profile_qc(self, v):
-        return self.r.variables()[v+'_WODprofileflag'][self.i].item()
-
     def t(self):
-        return self.var('Temperature')
+        return self.var_data('Temperature')
 
     def t_unc(self):
-        return self.var_unc('Temperature')
+        return self.var_data_unc('Temperature')
 
     def t_qc_mask(self):
         return None
@@ -220,7 +208,7 @@ class Profile():
         return None
 
     def s(self):
-        return self.var('Salinity')
+        return self.var_data('Salinity')
 
     def s_qc_mask(self):
         return None
@@ -235,16 +223,16 @@ class Profile():
         return None
 
     def oxygen(self):
-        return self.var('Oxygen')
+        return self.var_data('Oxygen')
 
     def phosphate(self):
-        return self.var('Phosphate')
+        return self.var_data('Phosphate')
 
     def silicate(self):
-        return self.var('Silicate')
+        return self.var_data('Silicate')
 
     def pH(self):
-        return self.var('pH')
+        return self.var_data('pH')
 
     def p(self):
         return None
