@@ -108,14 +108,14 @@ class Profile():
 
     def PIs(self):
         offset = self.determine_offset('Primary_Investigator_rowsize')
-        ntemps = self.r.variables()['Primary_Investigator_rowsize'][self.i].item()
-        pis = self.r.variables()['Primary_Investigator'][offset:offset + ntemps]
+        nentries = self.r.variables()['Primary_Investigator_rowsize'][self.i].item()
+        pis = self.r.variables()['Primary_Investigator'][offset:offset + nentries]
         return [self.decode_bytearray(a) for a in pis]
 
     def PIs_var(self):
         offset = self.determine_offset('Primary_Investigator_rowsize')
-        ntemps = self.r.variables()['Primary_Investigator_rowsize'][self.i].item()
-        vars = self.r.variables()['Primary_Investigator_VAR'][offset:offset + ntemps]
+        nentries = self.r.variables()['Primary_Investigator_rowsize'][self.i].item()
+        vars = self.r.variables()['Primary_Investigator_VAR'][offset:offset + nentries]
         return [self.decode_bytearray(a) for a in vars]
 
     def originator_cruise(self):
@@ -130,8 +130,37 @@ class Profile():
     def originator_flag_type(self):
         return None
 
-    def probe_type(self):
-        return None
+    def probe_type(self, raw=False):
+        # probe type; by default converts back to index from https://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf,
+        # for backwards compatibility. set raw=True to get the string directly from the netCDF dataset variable.
+        
+        probe = self.decode_bytearray(self.r.variables()['dataset'][self.i])
+        if raw:
+            return probe
+        else:
+            probecodes = {
+                "unknown": 0,
+                "MBT": 1,
+                "XBT": 2,
+                "DBT": 3,
+                "CTD": 4,
+                "STD": 5,
+                "XCTD": 6,
+                "bottle/rossette/net": 7,
+                "underway/intake": 8,
+                "profling float": 9,
+                "moored buoy": 10,
+                "drifting buoy": 11,
+                "towed CTD": 12,
+                "animal mounted": 13,
+                "bucket": 14,
+                "glider": 15,
+                "microBT": 16
+            }
+            if probe in probecodes:
+                return probecodes[probe]
+            else:
+                return None
 
     def var_index(self, code=1, s=False):
         return None
@@ -141,34 +170,56 @@ class Profile():
         generic variable extractor. examples of v:
         'Temperature', 'Salinity', 'Oxygen', 'Phosphate', 'Silicate', 'pH', ...
         '''
-
-        offset = self.determine_offset(v+'_row_size')
-        ntemps = self.r.variables()[v+'_row_size'][self.i].item()
-        return self.r.variables()[v][offset:offset + ntemps]
+        data = numpy.ma.array(numpy.zeros(self.n_levels()), mask=True)
+        if v in self.r.variables():
+            offset = self.determine_offset(v+'_row_size')
+            nentries = self.r.variables()[v+'_row_size'][self.i].item()
+            data = self.r.variables()[v][offset:offset + nentries]
+        return data
 
     def var_data_unc(self, v):
-        offset = self.determine_offset(v+'_row_size')
-        ntemps = self.r.variables()[v+'_row_size'][self.i].item()
-        return self.r.variables()[v+'_uncertainty'][offset:offset + ntemps]
+        data = numpy.ma.array(numpy.zeros(self.n_levels()), mask=True)
+        if v in self.r.variables():
+            offset = self.determine_offset(v+'_row_size')
+            nentries = self.r.variables()[v+'_row_size'][self.i].item()
+            data = self.r.variables()[v+'_uncertainty'][offset:offset + nentries]
+        return data
 
     def var_metadata(self, index):
         return None
 
-    def var_level_qc(self, v, flagtype='IQuOD'):
-        if flagtype == 'IQuOD':
-            flag = 'Temperature_IQUODflag'
-        elif flagtype == 'WOD':
-            flag = 'Temperature_WODflag'
-
-        offset = self.determine_offset(v+'_row_size')
-        ntemps = self.r.variables()[v+'_row_size'][self.i].item()
-        return self.r.variables()[flag][offset:offset + ntemps]
+    def var_level_qc(self, v, flagtype='orig'):
+        # per level QC decisions from flagtype QC provider for variable v
+        # typical values of flagtype: orig | IQuOD | WOD
+        flag = v+'_'+flagtype+'flag'
+        data = numpy.ma.array(numpy.zeros(self.n_levels()), mask=True)
+        if flag in self.r.variables():
+            offset = self.determine_offset(v+'_row_size')
+            nentries = self.r.variables()[v+'_row_size'][self.i].item()
+            data = self.r.variables()[flag][offset:offset + nentries]
+        return data
 
     def var_profile_qc(self, v):
-        return self.r.variables()[v+'_WODprofileflag'][self.i].item()
+        if v+'_WODprofileflag' in self.r.variables():
+            return self.r.variables()[v+'_WODprofileflag'][self.i].item()
+        else:
+            return None
 
-    def var_qc_mask(self, index):
-        return None
+    def var_qc_mask(self, v, flagtype='orig'):
+        """ Returns a boolean array showing which levels are rejected
+            by the quality control (values are True). A true is only
+            put in the array if there is a rejection (not if there is 
+            a missing value)."""
+        data = numpy.ma.array(numpy.zeros(self.n_levels()), mask=False, dtype=bool)
+        prof = self.var_profile_qc(v)
+        if prof is not None and prof > 0:
+            data[:] = True
+        else:
+            zqc = self.z_level_qc(flagtype)
+            data[(zqc.mask == False) & (zqc > 0)] = True
+            lqc = self.var_level_qc(v, flagtype)
+            data[(lqc.mask == False) & (lqc > 0)] = True
+        return data
 
     ## level info
 
@@ -180,14 +231,8 @@ class Profile():
         offset = self.determine_offset('z_row_size')
         return self.r.variables()['z_uncertainty'][offset:offset + self.n_levels()]
 
-    def z_level_qc(self, flagtype='IQuOD'):
-        if flagtype == 'IQuOD':
-            flag = 'z_IQUODflag'
-        elif flagtype == 'WOD':
-            flag = 'z_WODflag'
-
-        offset = self.determine_offset('z_row_size')
-        return self.r.variables()[flag][offset:offset + self.n_levels()]
+    def z_level_qc(self, flagtype='orig'):
+        return self.var_level_qc('z', flagtype)
 
     def t(self):
         return self.var_data('Temperature')
@@ -195,10 +240,10 @@ class Profile():
     def t_unc(self):
         return self.var_data_unc('Temperature')
 
-    def t_qc_mask(self):
-        return None
+    def t_qc_mask(self, flagtype='orig'):
+        return var_qc_mask('Temperature', flagtype)
 
-    def t_level_qc(self, flagtype='IQuOD'):
+    def t_level_qc(self, flagtype='orig'):
         return self.var_level_qc('Temperature', flagtype)
 
     def t_profile_qc(self):
@@ -210,10 +255,10 @@ class Profile():
     def s(self):
         return self.var_data('Salinity')
 
-    def s_qc_mask(self):
-        return None
+    def s_qc_mask(self, flagtype='orig'):
+        return var_qc_mask('Salinity', flagtype)
 
-    def s_level_qc(self, flagtype='IQuOD'):
+    def s_level_qc(self, flagtype='orig'):
         return self.var_level_qc('Salinity', flagtype)
 
     def s_profile_qc(self):
@@ -235,5 +280,5 @@ class Profile():
         return self.var_data('pH')
 
     def p(self):
-        return None
+        return self.var_data('Pressure')
 

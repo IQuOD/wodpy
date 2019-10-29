@@ -88,6 +88,14 @@ class TestClass():
         d = self.classic1.datetime()
         assert timedelta(seconds=-18) < (d - datetime(1934, 8, 7, 10, 22, 12)) < timedelta(seconds=18), 'time should have been close to 1934-08-07 10:22:12, instead read %s' % d
 
+    def test_probe_type(self):
+        '''
+        check probe type == 7
+        '''
+
+        probe = self.classic1.probe_type() 
+        assert probe == 7, 'probe should have been 7, instead read %f' % probe
+
     def test_depth(self):
         '''
         check depths == [0.0, 10.0, 25.0, 50.0]
@@ -176,3 +184,4 @@ class TestClass():
         truth = [numpy.float32(t) for t in truth]
         pH = self.classic1.pH()
         assert numpy.array_equal(pH, truth), 'pH levels should have been [8.100, 8.100, 8.100, 8.050], instead read %s' % pH.__str__()
+
