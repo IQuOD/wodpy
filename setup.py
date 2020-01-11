@@ -7,6 +7,7 @@ setup(
     license='MIT',
     description='A parser for the WOD data format, described in http://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf',
     long_description=open('README.md').read(),
+    long_description_content_type='text/markdown'
     install_requires=['numpy', 'pandas'],
     url='https://github.com/IQuOD/wodpy',
     author='Simon Good, Bill Mills',
