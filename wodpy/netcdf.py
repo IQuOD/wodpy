@@ -19,6 +19,18 @@ class Ragged():
     def variables(self):
         return self.rootgrp.variables
 
+    def attributes(self):
+        return self.rootgrp.ncattrs()
+
+    def get_global_attr(self, attr):
+        # unpack a global attribute from this ragged array.
+        if attr in self.attributes():
+            return self.rootgrp.getncattr(attr)
+        else:
+            print('Attribute ' + attr + ' not found in this ragged array. Valid options are: ')
+            print(self.attributes())
+            return None
+
 class Profile():
     '''
     object to represent a single wodpy-compatible profile object
@@ -132,8 +144,8 @@ class Profile():
 
     def probe_type(self, raw=False):
         # probe type; by default converts back to index from https://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf,
-        # for backwards compatibility. set raw=True to get the string directly from the netCDF dataset variable.
-        
+        # for backwards compatibility. Set raw=True to get the string directly from the netCDF dataset variable.
+
         probe = self.decode_bytearray(self.r.variables()['dataset'][self.i])
         if raw:
             return probe
