@@ -65,28 +65,56 @@ class Profile():
         else:
             return sum([int(a) for a in previous])
 
-    ## metadata
+    def locate_in_ragged(self, v):
+        '''
+        returns (offset, nentries) for variable v to extract it for this profile from the raggedarray.
+        '''
+        offset = self.determine_offset(v+'_row_size')
+        nentries = self.metadata(v+'_row_size')
+        return offset, nentries
 
-    def latitude(self):
-        return self.r.variables()['lat'][self.i].item()
+    ## profile metadata
 
-    def latitude_unc(self):
-        return None
+    def metadata(self, metadata_key):
+        # hardcoded list for now since per-profile and per-level variables are all in the same
+        # netCDF variables list, but this function is only appropriate for per-profile info.
+        # would like to see this autodetected in future.
+        # furthermore splitting out into vars noted in the spec docs, and other vars I'm seeing
+        # in data downloaded from NOAA; should converge as spec is finalized?
+        spec_vars = ['Access_no', 'Bottom_Depth', 'Cast_Direction', 'country', 'dataset', 'date', 'dbase_orig',
+                     'GMT_time', 'time', 'real_time', 'Orig_Stat_Num', 'originators_cruise_identifier'
+                     'Recorder', 'Platform', 'WOD_cruise_identifier', 'wod_unique_cast', 'crs', 'lat', 'lon',
+                     'Pressure_row_size', 'z_row_size', 'Temperature_Instrument', 'Temperature_row_size',
+                     'Temperature_WODprofileflag', 'Salinity_row_size', 'Salinity_WODprofileflag',
+                     'Oxygen_row_size', 'Oxygen_WODprofileflag']
+        novel_vars = ['Temperature_WODflag', 'z_WODflag', 'needs_z_fix', 'Bottom_Hit', 'depth_eq', 'Dry_Bulb_Temp', 'Wind_Speed', 'Wind_Direction']
+        metadata_vars = spec_vars + novel_vars
+        if metadata_key not in metadata_vars:
+            print('Metadata variable ' + metadata_key + ' not part of the IQuOD spec. Valid options are:')
+            print(metadata_vars)
+            return None
+        elif metadata_key not in list(self.r.variables()):
+            print('Metadata variable ' + metadata_key + ' part of the spec but not part of your current ragged array')
+            return None
+        else:
+            return self.r.variables()[metadata_key][self.i].item()
 
-    def longitude(self):
-        return self.r.variables()['lon'][self.i].item()
-
-    def longitude_unc(self):
-        return None
+    ### profile metadata - backwards compatibility helpers
 
     def uid(self):
-        return self.r.variables()['wod_unique_cast'][self.i].item()
+        return self.metadata('wod_unique_cast')
+
+    def latitude(self):
+        return self.metadata('lat')
+
+    def latitude(self):
+        return self.metadata('lon')
 
     def n_levels(self):
-        return self.r.variables()['z_row_size'][self.i].item()
+        return self.metadata('z_row_size')
 
     def _date(self):
-        return self.r.variables()['date'][self.i].item()
+        return self.metadata('date')
 
     def year(self):
         return int(str(self._date())[0:4])
@@ -98,7 +126,7 @@ class Profile():
         return int(str(self._date())[6:8])
 
     def time(self):
-        return self.r.variables()['GMT_time'][self.i].item()
+        return self.metadata('GMT_time')
 
     def datetime(self):
         """ Returns the date and time as a datetime object. """
@@ -120,24 +148,21 @@ class Profile():
 
     def PIs(self):
         offset = self.determine_offset('Primary_Investigator_rowsize')
-        nentries = self.r.variables()['Primary_Investigator_rowsize'][self.i].item()
+        nentries = self.metadata('Primary_Investigator_rowsize')
         pis = self.r.variables()['Primary_Investigator'][offset:offset + nentries]
         return [self.decode_bytearray(a) for a in pis]
 
     def PIs_var(self):
         offset = self.determine_offset('Primary_Investigator_rowsize')
-        nentries = self.r.variables()['Primary_Investigator_rowsize'][self.i].item()
+        nentries = self.metadata('Primary_Investigator_rowsize')
         vars = self.r.variables()['Primary_Investigator_VAR'][offset:offset + nentries]
         return [self.decode_bytearray(a) for a in vars]
 
     def originator_cruise(self):
-        return self.decode_bytearray(self.r.variables()['originators_cruise_identifier'][self.i])
+        return self.decode_bytearray(self.metadata('originators_cruise_identifier'))
 
     def originator_station(self):
-        return self.r.variables()['Orig_Stat_Num'][self.i].item()
-
-    def extract_secondary_header(self, index):
-        return None
+        return self.metadata('Orig_Stat_Num')
 
     def originator_flag_type(self):
         return None
@@ -174,31 +199,41 @@ class Profile():
             else:
                 return None
 
-    def var_index(self, code=1, s=False):
-        return None
+    ## per-level info
 
-    def var_data(self, v):
-        '''
-        generic variable extractor. examples of v:
-        'Temperature', 'Salinity', 'Oxygen', 'Phosphate', 'Silicate', 'pH', ...
-        '''
-        data = numpy.ma.array(numpy.zeros(self.n_levels()), mask=True)
-        if v in self.r.variables():
-            offset = self.determine_offset(v+'_row_size')
-            nentries = self.r.variables()[v+'_row_size'][self.i].item()
-            data = self.r.variables()[v][offset:offset + nentries]
-        return data
+    def level_unpack(self, v, datatype):
+        # unpack variable v's datatype
+        # v can be ['Pressure', 'z', 'Temperature', 'Salinity', 'Oxygen'] depending on datatype
+        # datatype can be ['data', 'sigfigs', 'uncertainty', 'IQUODflag']
 
-    def var_data_unc(self, v):
-        data = numpy.ma.array(numpy.zeros(self.n_levels()), mask=True)
-        if v in self.r.variables():
-            offset = self.determine_offset(v+'_row_size')
-            nentries = self.r.variables()[v+'_row_size'][self.i].item()
-            data = self.r.variables()[v+'_uncertainty'][offset:offset + nentries]
-        return data
+        # again would like to autodetect rather than hard code what is appropriate to parse as a per-level data
+        # but this switch for now to reflect the spec
+        if datatype == 'data':
+            level_vars = ['Pressure', 'z', 'Temperature', 'Salinity', 'Oxygen']
+            suffix = ''
+        elif datatype == 'sigfigs':
+            level_vars = ['Pressure', 'z', 'Temperature', 'Salinity', 'Oxygen']
+            suffix = '_sigfigs'
+        elif datatype == 'uncertainty':
+            level_vars = ['Pressure', 'z', 'Temperature', 'Salinity']
+            suffix = '_uncertainty'
+        elif datatype == 'IQUODflag':
+            level_vars = ['z', 'Temperature', 'Salinity', 'Oxygen']
+            suffix = '_IQUODflag'
+        else:
+            print(datatype + ' is not a valid datatype to unpack. Allowed values are: ["data", "sigfigs", "uncertainty", "IQUODflag"]' )
+            return numpy.ma.array(numpy.zeros(self.n_levels()), mask=True)
 
-    def var_metadata(self, index):
-        return None
+        if v in level_vars:
+            offset, nentries = self.locate_in_ragged(v)
+            data = self.r.variables()[v+suffix][offset:offset + nentries]
+            return data
+        else:
+            print('Level variable '+ v +' not supported for ' + datatype + '. Supported measurements are:')
+            print(level_vars)
+            return numpy.ma.array(numpy.zeros(self.n_levels()), mask=True)
+
+    ### per-level data - backwards compatibility helpers
 
     def var_level_qc(self, v, flagtype='orig'):
         # per level QC decisions from flagtype QC provider for variable v
@@ -207,13 +242,13 @@ class Profile():
         data = numpy.ma.array(numpy.zeros(self.n_levels()), mask=True)
         if flag in self.r.variables():
             offset = self.determine_offset(v+'_row_size')
-            nentries = self.r.variables()[v+'_row_size'][self.i].item()
+            nentries = self.metadata(v+'_row_size')
             data = self.r.variables()[flag][offset:offset + nentries]
         return data
 
     def var_profile_qc(self, v):
         if v+'_WODprofileflag' in self.r.variables():
-            return self.r.variables()[v+'_WODprofileflag'][self.i].item()
+            return self.metadata(v+'_WODprofileflag')
         else:
             return None
 
@@ -233,24 +268,20 @@ class Profile():
             data[(lqc.mask == False) & (lqc > 0)] = True
         return data
 
-    ## level info
-
     def z(self):
-        offset = self.determine_offset('z_row_size')
-        return self.r.variables()['z'][offset:offset + self.n_levels()]
+        return self.level_unpack('z', 'data')
 
     def z_unc(self):
-        offset = self.determine_offset('z_row_size')
-        return self.r.variables()['z_uncertainty'][offset:offset + self.n_levels()]
+        return self.level_unpack('z', 'uncertainty')
 
     def z_level_qc(self, flagtype='orig'):
         return self.var_level_qc('z', flagtype)
 
     def t(self):
-        return self.var_data('Temperature')
+        return self.level_unpack('Temperature', 'data')
 
     def t_unc(self):
-        return self.var_data_unc('Temperature')
+        return self.level_unpack('Temperature', 'uncertainty')
 
     def t_qc_mask(self, flagtype='orig'):
         return var_qc_mask('Temperature', flagtype)
@@ -261,11 +292,8 @@ class Profile():
     def t_profile_qc(self):
         return self.var_profile_qc('Temperature')
 
-    def t_metadata(self):
-        return None
-
     def s(self):
-        return self.var_data('Salinity')
+        return self.level_unpack('Salinity', 'data')
 
     def s_qc_mask(self, flagtype='orig'):
         return var_qc_mask('Salinity', flagtype)
@@ -276,21 +304,9 @@ class Profile():
     def s_profile_qc(self):
         return self.var_profile_qc('Salinity')
 
-    def s_metadata(self):
-        return None
-
     def oxygen(self):
-        return self.var_data('Oxygen')
-
-    def phosphate(self):
-        return self.var_data('Phosphate')
-
-    def silicate(self):
-        return self.var_data('Silicate')
-
-    def pH(self):
-        return self.var_data('pH')
+        return self.level_unpack('Oxygen', 'data')
 
     def p(self):
-        return self.var_data('Pressure')
+        return self.level_unpack('Pressure', 'data')
 
