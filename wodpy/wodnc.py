@@ -19,7 +19,7 @@
 
 ## extract some per-level data using the keys you found above:
 
-# print(p.level_unpack('Temperature', 'data'))
+# print(p.level_unpack('Temperature'))
 
 ################### DRAFT #####################
 
@@ -166,26 +166,16 @@ class Profile():
         else:
             logging.warning(metadata_key + ' not a valid metadata name. See Profile.r.variables().keys() for all variables, and Profile.is_metadata() to check if a key is per-profile metadata.')
 
-    def level_unpack(self, v, datatype):
-        # unpack variable v's datatype
-        # datatype can be ['data', 'sigfigs', 'WODflag', 'origflag']
+    def level_unpack(self, level_key):
+        # unpack variable per-level variable level_key
 
         data = numpy.ma.array(numpy.zeros(self.n_levels()), mask=True)
 
-        # determine variable suffix based on datatype
-        if datatype == 'data':    
-            suffix = ''
-        elif datatype in ['sigfigs', 'WODflag', 'origflag']:
-            suffix = '_' + datatype
+        if self.is_level_data(level_key):
+            offset, nentries = self.locate_in_ragged(level_key)
+            data = self.r.variables()[level_key][offset:offset + nentries]
         else:
-            logging.warning(datatype + ' is not a valid datatype to unpack. Allowed values are: ["data", "sigfigs", "WODflag", "origflag"]' )
-            return data
-
-        if v+suffix in self.r.variables():
-            offset, nentries = self.locate_in_ragged(v)
-            data = self.r.variables()[v+suffix][offset:offset + nentries]
-        else:
-            logging.warning('Level variable ' + v + ' not found for ' + datatype)
+            logging.warning('Level variable ' + level_key + ' not found.')
         
         return data
 
@@ -301,7 +291,7 @@ class Profile():
         # typical values of flagtype: orig | WOD
         # redundant with level_unpack, here for symmetry with ascii implementation
 
-        return level_unpack(v, flagtype+'flag')
+        return level_unpack(v+'_'+flagtype+'flag')
 
     def var_profile_qc(self, v):
         # also here for consistency with ascii parser
@@ -328,7 +318,7 @@ class Profile():
         return data
 
     def z(self):
-        return self.level_unpack('z', 'data')
+        return self.level_unpack('z')
 
     def z_unc(self):
         return None
@@ -337,7 +327,7 @@ class Profile():
         return self.var_level_qc('z', flagtype)
 
     def t(self):
-        return self.level_unpack('Temperature', 'data')
+        return self.level_unpack('Temperature')
 
     def t_unc(self):
         return None
@@ -352,7 +342,7 @@ class Profile():
         return self.var_profile_qc('Temperature')
 
     def s(self):
-        return self.level_unpack('Salinity', 'data')
+        return self.level_unpack('Salinity')
 
     def s_qc_mask(self, flagtype='orig'):
         return self.var_qc_mask('Salinity', flagtype)
