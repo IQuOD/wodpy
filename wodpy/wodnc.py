@@ -24,7 +24,7 @@
 ################### DRAFT #####################
 
 from netCDF4 import Dataset
-import numpy, logging, collections
+import numpy, logging
 from datetime import datetime, timedelta
 
 class Ragged():
