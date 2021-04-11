@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from wodpy import netcdf
+from wodpy import wodnc
 import numpy, math, pandas
 
 class TestClass():
@@ -7,8 +7,8 @@ class TestClass():
 
         # example from pp 124 of http://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf
         # with IQuOD flags
-        r = netcdf.Ragged("tests/testData/ocldb1570984477.6279_OSD.nc")
-        self.classic1 = netcdf.Profile(r, 55)
+        r = wodnc.Ragged("tests/testData/ocldb1570984477.6279_OSD.nc")
+        self.classic1 = wodnc.Profile(r, 55)
 
         return
 
@@ -106,15 +106,6 @@ class TestClass():
         z = self.classic1.z()
         assert numpy.array_equal(z, truth), 'depths should have been [0, 10, 25, 50], instead read %s' % z.__str__()
 
-    def test_depth_error(self):
-        '''
-        check depth errors == [0,0.5,1.25,2.5]
-        '''
-
-        truth = numpy.ma.MaskedArray([0,0.5,1.25,2.5], [False, False, False, False])
-        z_unc = self.classic1.z_unc()
-        assert numpy.array_equal(z_unc, truth), 'depth errors should have been [0,0.5,1.25,2.5], instead read %s' % z_unc.__str__()
-
     def test_temperature(self):
         '''
         check temperatures == [8.960, 8.950, 0.900, -1.230]
@@ -125,16 +116,6 @@ class TestClass():
         t = self.classic1.t()
         assert numpy.array_equal(t, truth), 'temperatures should have been [8.96, 8.95, 0.9, -1.23], instead read %s' % t.__str__()
 
-    def test_temperature_error(self):
-        '''
-        check temperature errors == [0.02,0.02,0.02,0.02]
-        '''
-
-        truth = numpy.ma.MaskedArray([0.02,0.02,0.02,0.02], [False, False, False, False], dtype=numpy.float32)
-        t_unc = self.classic1.t_unc()
-        assert numpy.array_equal(t_unc, truth), 'temperature errors should have been [0.02,0.02,0.02,0.02], instead read %s' % t_unc.__str__()
-
-
     def test_salinity(self):
         '''
         check salinities == [30.900, 30.900, 31.910, 32.410]
@@ -144,44 +125,3 @@ class TestClass():
         truth = [numpy.float32(t) for t in truth]
         s = self.classic1.s()
         assert numpy.array_equal(s, truth), 'salinities should have been [30.9, 30.9, 31.91, 32.41], instead read %s' % s.__str__()
-
-    def test_oxygen(self):
-        '''
-        check oxygen levels = [6.750, 6.700, 8.620, 7.280]
-        '''
-
-        truth = [6.750, 6.700, 8.620, 7.280]
-        truth = [numpy.float32(t) for t in truth]
-        o2 = self.classic1.oxygen()
-        assert numpy.array_equal(o2, truth), 'oxygen levels should have been [6.750, 6.700, 8.620, 7.280], instead read %s' % o2.__str__()
-
-    def test_phosphate(self):
-        '''
-        check phosphate levels = [0.650, 0.710, 0.900, 1.170]
-        '''
-
-        truth = [0.650, 0.710, 0.900, 1.170]
-        truth = [numpy.float32(t) for t in truth]
-        phos = self.classic1.phosphate()
-        assert numpy.array_equal(phos, truth), 'phosphate levels should have been [0.650, 0.710, 0.900, 1.170], instead read %s' % phos.__str__()
-
-    def test_silicate(self):
-        '''
-        check silicate levels = [20.500, 12.300, 15.400, 25.600]
-        '''
-
-        truth = [20.500, 12.300, 15.400, 25.600]
-        truth = [numpy.float32(t) for t in truth]
-        sili = self.classic1.silicate()
-        assert numpy.array_equal(sili, truth), 'silicate levels should have been [20.500, 12.300, 15.400, 25.600], instead read %s' % sili.__str__()
-
-    def test_pH(self):
-        '''
-        check pH levels = [8.100, 8.100, 8.100, 8.050]
-        ''' 
-    
-        truth = [8.100, 8.100, 8.100, 8.050]
-        truth = [numpy.float32(t) for t in truth]
-        pH = self.classic1.pH()
-        assert numpy.array_equal(pH, truth), 'pH levels should have been [8.100, 8.100, 8.100, 8.050], instead read %s' % pH.__str__()
-

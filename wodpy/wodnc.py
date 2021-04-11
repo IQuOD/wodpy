@@ -4,9 +4,9 @@
 
 ## load data into a profile object:
 
-# from wodpy import netcdf
-# r = netcdf.Ragged("/wodpy/ocldb1617988395.19301_XBT.nc")
-# p = netcdf.Profile(r, 0)  # get the first profile in the file
+# from wodpy import wodnc
+# r = wodnc.Ragged("/wodpy/ocldb1617988395.19301_XBT.nc")
+# p = wodnc.Profile(r, 0)  # get the first profile in the file
 
 ## find out what data is available:
 
@@ -208,7 +208,7 @@ class Profile():
         return self.metadata('wod_unique_cast')
 
     def n_levels(self):
-        return self.r.ncasts()
+        return self.metadata('z_row_size')
 
     def _date(self):
         return self.metadata('date')
