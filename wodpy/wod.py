@@ -744,6 +744,26 @@ class WodProfile(object):
         index = self.var_index(25)
         return self.var_data(index)
 
+    def find_instrument_code(self, varcode):
+        '''
+        given a wodpy profile and a variable code varcode as defined in table 3 of [reference 1],
+        return the instrument code from [reference 2] associated with this measurement, if it is available;
+        if not, return None.
+        [reference 1]: https://www.ncei.noaa.gov/data/oceans/woa/WOD/DOC/wodreadme.pdf
+        [reference 2]: https://www.ncei.noaa.gov/data/oceans/woa/WOD/CODES/PDF/v_5_instrument.pdf
+        '''    
+
+        for var in self.primary_header['variables']:
+            # pick out the variable of interest, for example varcode==1 is temperature.
+            if var['Variable code'] == varcode:
+                for meta in var['metadata']:
+                    # pick out metadata index 5, which corresponds to v_5_instrument
+                    if meta['Variable-specific code'] == 5:
+                        return meta['Value']    
+
+        # if no instrument is found, return None.
+        return None
+
     def df(self):
         """ Returns level data as a pandas data frame. 
             Profile metadata recorded as custom attributes on the dataframe.
