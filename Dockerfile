@@ -1,0 +1,8 @@
+FROM python:3.9
+
+RUN apt-get update -y && apt-get install -y libhdf5-serial-dev netcdf-bin libnetcdf-dev
+RUN pip install numpy pandas cftime netCDF4 nose
+
+WORKDIR /wodpy
+COPY . .
+CMD nosetests tests/*.py

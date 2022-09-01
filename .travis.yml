@@ -6,9 +6,8 @@ services:
   - docker
 
 before_install:
-- docker pull continuumio/anaconda
-- docker pull continuumio/anaconda3
+- docker image pull python 3.9
 
 script:
-- docker container run -v $PWD:/wodpy_latest -e PATH=/opt/conda/bin continuumio/anaconda /bin/bash -c "cd /wodpy_latest; pip install -r requirements.txt; nosetests tests/*.py"
-- docker container run -v $PWD:/wodpy_latest -e PATH=/opt/conda/bin continuumio/anaconda3 /bin/bash -c "cd /wodpy_latest; pip install -r requirements.txt; nosetests tests/*.py"
+- docker image build -t wodpy:test .
+- docker container run wodpy:test
