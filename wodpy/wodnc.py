@@ -326,6 +326,12 @@ class Profile():
     def z_level_qc(self, flagtype='orig'):
         return self.var_level_qc('z', flagtype)
 
+    def var_data_unc(self):
+        return None
+
+    def var_metadata(self):
+        return None
+
     def t(self):
         return self.level_unpack('Temperature')
 
@@ -341,8 +347,14 @@ class Profile():
     def t_profile_qc(self):
         return self.var_profile_qc('Temperature')
 
+    def t_metadata(self):
+        return None
+
     def s(self):
         return self.level_unpack('Salinity')
+
+    def s_unc(self):
+        return None
 
     def s_qc_mask(self, flagtype='orig'):
         return self.var_qc_mask('Salinity', flagtype)
@@ -353,4 +365,20 @@ class Profile():
     def s_profile_qc(self):
         return self.var_profile_qc('Salinity')
 
+    def s_metadata(self):
+        return None
 
+    def oxygen(self):
+        return None    
+
+    def phosphate(self):
+        return None  
+
+    def silicate(self):
+        return None  
+
+    def pH(self):
+        return None  
+
+    def p(self):
+        return None  
