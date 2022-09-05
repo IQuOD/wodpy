@@ -8,7 +8,7 @@ class TestClass():
         # example from pp 124 of http://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf
         # with IQuOD flags
         r = wodnc.Ragged("tests/testData/ocldb1570984477.6279_OSD.nc")
-        self.classic1 = wodnc.Profile(r, 55)
+        self.classic1 = wodnc.ncProfile(r, 55)
 
         return
 

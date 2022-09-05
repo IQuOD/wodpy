@@ -56,7 +56,7 @@ class Ragged():
             print(self.attributes())
             return None
 
-class Profile():
+class ncProfile():
     '''
     object to represent a single wodpy-compatible profile object
     '''
@@ -291,7 +291,7 @@ class Profile():
         # typical values of flagtype: orig | WOD
         # redundant with level_unpack, here for symmetry with ascii implementation
 
-        return level_unpack(v+'_'+flagtype+'flag')
+        return self.level_unpack(v+'_'+flagtype+'flag')
 
     def var_profile_qc(self, v):
         # also here for consistency with ascii parser
@@ -382,3 +382,12 @@ class Profile():
 
     def p(self):
         raise NotImplementedError('tbd')  
+
+    def df(self):
+        raise NotImplementedError('tbd')
+
+    def npdict(self):
+        raise NotImplementedError('tbd')
+
+    def header(self):
+        raise NotImplementedError('tbd')

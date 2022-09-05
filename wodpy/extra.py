@@ -2,6 +2,7 @@
 from datetime import datetime
 
 from .wod import WodProfile
+from .wodnc import Ragged, ncProfile
 
 probe_type_table = {
         0: 'unkown',
@@ -31,9 +32,9 @@ class Wod4CoTeDe(object):
           can be used on WOD, but it must access the data in a specific
           structure, as offered here.
     """
-    def __init__(self, profile):
+    def __init__(self, profile, raggedIndex=None):
         """
-            profile can be a WodProfile object or an oppened WOD file.
+            profile can be a WodProfile object or an open WOD ascii file, or a wodnc.Ragged object with raggedIndex indicating the nth profile to read from the netcdf.
             For example:
             >>> fid = open('example.dat')
             >>> p = WodProfile(fid)
@@ -43,11 +44,20 @@ class Wod4CoTeDe(object):
             >>> fid = open('example.data')
             >>> profile = Wod4CoTeDe(fid)
 
+            or
+            >>> r = Ragged('example.nc')
+            >>> profile = Wod4CoTeDe(r, 0)
+
         """
-        try:
-            self.p = WodProfile(profile)
-        except:
+        if isinstance(raggedIndex, int) and isinstance(profile, Ragged):
+            self.p = ncProfile(profile, raggedIndex)
+        elif isinstance(profile, WodProfile):
             self.p = profile
+        else:
+            try: 
+                self.p = WodProfile(profile)
+            except:
+                raise ValueError('Wod4CoTeDe requires a wod.WodProfile object, an open wod-ascii text file, or a wodnc.Ragged and ragged index.')
 
         self.attributes = {}
         self.attributes['LATITUDE'] = self.p.latitude()
