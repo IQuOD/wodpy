@@ -125,3 +125,27 @@ class TestClass():
         truth = [numpy.float32(t) for t in truth]
         s = self.classic1.s()
         assert numpy.array_equal(s, truth), 'salinities should have been [30.9, 30.9, 31.91, 32.41], instead read %s' % s.__str__()
+
+    def test_oxygen(self):
+        truth = [293.90298, 291.90366, 375.3761,  317.39523]
+        truth = [numpy.float32(t) for t in truth]
+        s = self.classic1.oxygen()
+        assert numpy.array_equal(s, truth), 'dissolved oxygen should have been [293.90298, 291.90366, 375.3761,  317.39523], instead read %s' % s.__str__()
+
+    def test_phosphate(self):
+        truth = [0.63, 0.69, 0.88, 1.14]
+        truth = [numpy.float32(t) for t in truth]
+        s = self.classic1.phosphate()
+        assert numpy.array_equal(s, truth), 'phosphate should have been [0.63, 0.69, 0.88, 1.14], instead read %s' % s.__str__()
+
+    def test_silicate(self):
+        truth = [20, 12, 15, 25]
+        truth = [numpy.float32(t) for t in truth]
+        s = self.classic1.silicate()
+        assert numpy.array_equal(s, truth), 'silicate should have been [20, 12, 15, 25], instead read %s' % s.__str__()
+
+    def test_pH(self):
+        truth = [8.100, 8.100, 8.100, 8.050]
+        truth = [numpy.float32(t) for t in truth]
+        s = self.classic1.pH()
+        assert numpy.array_equal(s, truth), 'pH should have been [8.100, 8.100, 8.100, 8.050], instead read %s' % s.__str__()

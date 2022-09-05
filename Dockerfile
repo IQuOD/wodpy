@@ -5,4 +5,4 @@ RUN pip install numpy pandas cftime netCDF4 nose
 
 WORKDIR /wodpy
 COPY . .
-CMD nosetests tests/*.py
+CMD nosetests tests/netcdf_tests.py

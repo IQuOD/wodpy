@@ -167,7 +167,7 @@ class Profile():
             logging.warning(metadata_key + ' not a valid metadata name. See Profile.r.variables().keys() for all variables, and Profile.is_metadata() to check if a key is per-profile metadata.')
 
     def level_unpack(self, level_key):
-        # unpack variable per-level variable level_key
+        # unpack per-level variable level_key
 
         data = numpy.ma.array(numpy.zeros(self.n_levels()), mask=True)
 
@@ -369,16 +369,16 @@ class Profile():
         return None
 
     def oxygen(self):
-        return None    
+        return self.level_unpack('Oxygen')  
 
     def phosphate(self):
-        return None  
+        return self.level_unpack('Phosphate')  
 
     def silicate(self):
-        return None  
+        return self.level_unpack('Silicate')  
 
     def pH(self):
-        return None  
+        return self.level_unpack('pH') 
 
     def p(self):
         return None  
