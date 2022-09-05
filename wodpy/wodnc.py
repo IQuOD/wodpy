@@ -186,13 +186,13 @@ class Profile():
         return self.metadata('lat')
 
     def latitude_unc(self):
-        return None
+        raise NotImplementedError('tbd')
 
     def longitude(self):
         return self.metadata('lon')
 
     def longitude_unc(self):
-        return None
+        raise NotImplementedError('tbd')
 
     def uid(self):
         return self.metadata('wod_unique_cast')
@@ -252,7 +252,7 @@ class Profile():
         return self.metadata('Orig_Stat_Num')
 
     def originator_flag_type(self):
-        return None
+        raise NotImplementedError('tbd')
 
     def probe_type(self, raw=False):
         # probe type; by default converts back to index from https://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf,
@@ -321,22 +321,22 @@ class Profile():
         return self.level_unpack('z')
 
     def z_unc(self):
-        return None
+        raise NotImplementedError('tbd')
 
     def z_level_qc(self, flagtype='orig'):
         return self.var_level_qc('z', flagtype)
 
     def var_data_unc(self):
-        return None
+        raise NotImplementedError('tbd')
 
     def var_metadata(self):
-        return None
+        raise NotImplementedError('tbd')
 
     def t(self):
         return self.level_unpack('Temperature')
 
     def t_unc(self):
-        return None
+        raise NotImplementedError('tbd')
 
     def t_qc_mask(self, flagtype='orig'):
         return self.var_qc_mask('Temperature', flagtype)
@@ -348,13 +348,13 @@ class Profile():
         return self.var_profile_qc('Temperature')
 
     def t_metadata(self):
-        return None
+        raise NotImplementedError('tbd')
 
     def s(self):
         return self.level_unpack('Salinity')
 
     def s_unc(self):
-        return None
+        raise NotImplementedError('tbd')
 
     def s_qc_mask(self, flagtype='orig'):
         return self.var_qc_mask('Salinity', flagtype)
@@ -366,7 +366,7 @@ class Profile():
         return self.var_profile_qc('Salinity')
 
     def s_metadata(self):
-        return None
+        raise NotImplementedError('tbd')
 
     def oxygen(self):
         return self.level_unpack('Oxygen')  
@@ -381,4 +381,4 @@ class Profile():
         return self.level_unpack('pH') 
 
     def p(self):
-        return None  
+        raise NotImplementedError('tbd')  
