@@ -139,7 +139,7 @@ Constructing the per-level `ndarrays` should not be done more than once per prof
 
 ##### pandas
 
-`profile.df()` returns a pandas `DataFrame`, with per-level information as columns and per-profile information as keys in a `.meta` attribute:
+`profile.df()` returns a pandas `DataFrame`, with per-level information as columns and per-profile information as keys in a `.attrs` attribute:
 
 **Columns:**
  - `oxygen`: oxygen content (mL / L)
@@ -159,7 +159,7 @@ Constructing the per-level `ndarrays` should not be done more than once per prof
 
 **Attributes:**
 
-The following are keys in a `.meta` dictionary on the dataframe:
+The following are keys in a `.attrs` dictionary on the dataframe:
 
  - `cruise`: cruise ID number
  - `day`: of the month on [1, 31]
