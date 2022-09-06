@@ -1,0 +1,12 @@
+LICENSE
+README.md
+pyproject.toml
+wodpy/__init__.py
+wodpy/extra.py
+wodpy/wod.py
+wodpy/wodnc.py
+wodpy.egg-info/PKG-INFO
+wodpy.egg-info/SOURCES.txt
+wodpy.egg-info/dependency_links.txt
+wodpy.egg-info/requires.txt
+wodpy.egg-info/top_level.txt
