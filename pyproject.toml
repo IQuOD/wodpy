@@ -1,0 +1,25 @@
+[build-system]
+requires      = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wodpy"
+version = "2.0.0b0"
+description = "A parser for World Ocean Data files, both ASCII described in http://data.nodc.noaa.gov/woa/WOD/DOC/wodreadme.pdf, and the equivalent netCDF."
+readme = "README.md"
+authors = [{ name = "Simon Good" }, {name = "Bill Mills" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "numpy",
+    "pandas",
+    "netCDF4"
+]
+requires-python = ">=3.9"
+
+[project.urls]
+Homepage = "https://github.com/IQuOD/wodpy"
