@@ -3,7 +3,7 @@
 
 Release History:
 
-version | DOI
+Version | DOI
 --------|----
 1.6.1   | <a href="https://doi.org/10.5281/zenodo.3251132"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3251132.svg" alt="DOI"></a>
 1.6.0   | <a href="https://doi.org/10.5281/zenodo.1302513"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1302513.svg" alt="DOI"></a>

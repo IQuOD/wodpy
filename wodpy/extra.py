@@ -59,19 +59,19 @@ class Wod4CoTeDe(object):
             except:
                 raise ValueError('Wod4CoTeDe requires a wod.WodProfile object, an open wod-ascii text file, or a wodnc.Ragged and ragged index.')
 
-        self.attributes = {}
-        self.attributes['LATITUDE'] = self.p.latitude()
-        self.attributes['LONGITUDE'] = self.p.longitude()
-        self.attributes['uid'] = self.p.uid()
+        self.attrs = {}
+        self.attrs['LATITUDE'] = self.p.latitude()
+        self.attrs['LONGITUDE'] = self.p.longitude()
+        self.attrs['uid'] = self.p.uid()
         try:
-            self.attributes['probe_code'] = int(self.p.probe_type())
-            self.attributes['probe_type'] = \
+            self.attrs['probe_code'] = int(self.p.probe_type())
+            self.attrs['probe_type'] = \
                     probe_type_table[self.p.probe_type()]
         except:
-            self.attributes['probe_code'] = None
-            self.attributes['probe_type'] = None
-        self.attributes['n_levels'] = self.p.n_levels()
-        self.attributes['datetime'] = self.p.datetime()
+            self.attrs['probe_code'] = None
+            self.attrs['probe_type'] = None
+        self.attrs['n_levels'] = self.p.n_levels()
+        self.attrs['datetime'] = self.p.datetime()
 
         self.data = {}
         # FIXME: pressure is 'almost' equal to depth.
@@ -86,6 +86,15 @@ class Wod4CoTeDe(object):
                 exec("self.data['%s'] = self.p.%s()" % (v, v))
             except:
                 pass
+
+    @property
+    def attributes(self):
+        """CoTeDe now uses .attrs instead of .attributes
+
+           This is a temporary solution during transition. In the near
+           future attributes will be dropped.
+        """
+        return self.attrs
 
     def keys(self):
         return self.data.keys()
