@@ -51,7 +51,7 @@ class TestClass():
         '''
 
         latitude = self.classic1.latitude()
-        df_latitude = self.classic1_df.meta['latitude']
+        df_latitude = self.classic1_df.attrs['latitude']
         np_latitude = self.classic1_dict['latitude']
         header_latitude = self.classic1_head.latitude
         assert latitude == 61.930, 'latitude should have been 61.930, instead read %f' % latitude
@@ -65,7 +65,7 @@ class TestClass():
         '''
 
         latitude_unc = self.classic1.latitude_unc()
-        df_latitude_unc = self.classic1_df.meta['latitude_unc']
+        df_latitude_unc = self.classic1_df.attrs['latitude_unc']
         np_latitude_unc = self.classic1_dict['latitude_unc']
         header_latitude_unc = self.classic1_head.latitude_unc
         assert latitude_unc is None, 'latitude error is undefined for this profile, instead read %f' % latitude_unc
@@ -79,7 +79,7 @@ class TestClass():
         '''
 
         longitude = self.classic1.longitude()
-        df_longitude = self.classic1_df.meta['longitude']
+        df_longitude = self.classic1_df.attrs['longitude']
         np_longitude = self.classic1_dict['longitude']
         header_longitude = self.classic1_head.longitude
         assert longitude == -172.270, 'longitude should have been -172.270, instead read %f' % longitude
@@ -93,7 +93,7 @@ class TestClass():
         '''
 
         longitude_unc = self.classic1.longitude_unc()
-        df_longitude_unc = self.classic1_df.meta['longitude_unc']
+        df_longitude_unc = self.classic1_df.attrs['longitude_unc']
         np_longitude_unc = self.classic1_dict['longitude_unc']
         header_longitude_unc = self.classic1_head.longitude_unc
         assert longitude_unc is None, 'longitude error is undefined for this profile, instead read %f' % longitude_unc
@@ -103,11 +103,11 @@ class TestClass():
 
     def test_uid(self):
         '''
-        check cruise ID == 67064
+        check profile ID == 67064
         '''
 
         uid = self.classic1.uid()
-        df_uid = self.classic1_df.meta['uid']
+        df_uid = self.classic1_df.attrs['uid']
         np_uid = self.classic1_dict['uid']
         header_uid = self.classic1_head.uid
         assert uid == 67064, 'uid should have been 67064, instead read %f' % uid
@@ -121,7 +121,7 @@ class TestClass():
         '''
 
         levels = self.classic1.n_levels()
-        df_levels = self.classic1_df.meta['n_levels']
+        df_levels = self.classic1_df.attrs['n_levels']
         np_levels = self.classic1_dict['n_levels']
         header_n_levels = self.classic1_head.n_levels
         assert levels == 4, 'levels should have been 4, instead read %f' % levels
@@ -135,7 +135,7 @@ class TestClass():
         '''
 
         year = self.classic1.year()
-        df_year = self.classic1_df.meta['year']
+        df_year = self.classic1_df.attrs['year']
         np_year = self.classic1_dict['year']
         header_year = self.classic1_head.year
         assert year == 1934, 'year should have been 1934, instead read %f' % year
@@ -149,7 +149,7 @@ class TestClass():
         '''
 
         month = self.classic1.month() 
-        df_month = self.classic1_df.meta['month']
+        df_month = self.classic1_df.attrs['month']
         np_month = self.classic1_dict['month']
         header_month = self.classic1_head.month
         assert month == 8, 'month should have been 8, instead read %f' % month
@@ -164,7 +164,7 @@ class TestClass():
         '''
 
         day = self.classic1.day()
-        df_day = self.classic1_df.meta['day']
+        df_day = self.classic1_df.attrs['day']
         np_day = self.classic1_dict['day']
         header_day = self.classic1_head.day
         assert day == 7, 'day should have been 7, instead read %f' % day
@@ -178,7 +178,7 @@ class TestClass():
         '''
 
         time = self.classic1.time()
-        df_time = self.classic1_df.meta['time']
+        df_time = self.classic1_df.attrs['time']
         np_time = self.classic1_dict['time']
         header_time = self.classic1_head.time
         assert time == 10.37, 'time should have been 10.37, instead read %f' % time
@@ -204,7 +204,7 @@ class TestClass():
         '''
 
         probe = self.classic1.probe_type() 
-        df_probe = self.classic1_df.meta['probe_type']
+        df_probe = self.classic1_df.attrs['probe_type']
         np_probe = self.classic1_dict['probe_type']
         header_probe = self.classic1_head.probe_type
         assert probe == 7, 'probe should have been 7, instead read %f' % probe
@@ -360,7 +360,7 @@ class TestClass():
 
         truth = [{'Variable code': 0, 'P.I. code': 215}, {'Variable code': 0, 'P.I. code': 216}, {'Variable code': -5006, 'P.I. code': 217}, {'Variable code': -5002, 'P.I. code': 218}]
         PIs = self.classic1.PIs()
-        df_PIs = self.classic1_df.meta['PIs']
+        df_PIs = self.classic1_df.attrs['PIs']
         np_PIs = self.classic1_dict['PIs']
         assert numpy.array_equal(PIs, truth), 'PIs should have been [{"Variable code": 0, "P.I. code": 215}, {"Variable code": 0, "P.I. code": 216}, {"Variable code": -5006, "P.I. code": 217}, {"Variable code": -5002, "P.I. code": 218}], instead read %s' % PIs.__str__()
         assert numpy.array_equal(df_PIs, truth), 'dataframe PIs should have been [{"Variable code": 0, "P.I. code": 215}, {"Variable code": 0, "P.I. code": 216}, {"Variable code": -5006, "P.I. code": 217}, {"Variable code": -5002, "P.I. code": 218}], instead read \n%s' % PIs.__str__()
@@ -370,7 +370,7 @@ class TestClass():
 
         truth = 'STOCS85A'
         originator_cruise = self.classic1.originator_cruise()
-        df_originator_cruise = self.classic1_df.meta['originator_cruise']
+        df_originator_cruise = self.classic1_df.attrs['originator_cruise']
         np_originator_cruise = self.classic1_dict['originator_cruise']
         assert originator_cruise == truth, 'Originator cruise should have been STOCS85A, instead read %s' % originator_cruise
         assert df_originator_cruise == truth, 'dataframe riginator cruise should have been STOCS85A, instead read %s' % df_originator_cruise
@@ -380,7 +380,7 @@ class TestClass():
 
         truth = None
         originator_station = self.classic1.originator_station()
-        df_originator_station = self.classic1_df.meta['originator_station']
+        df_originator_station = self.classic1_df.attrs['originator_station']
         np_originator_station = self.classic1_dict['originator_station']
         assert originator_station == truth
         assert df_originator_station == truth
@@ -410,7 +410,7 @@ class TestClass():
         '''
 
         latitude = self.iquod1.latitude()
-        df_latitude = self.iquod1_df.meta['latitude']
+        df_latitude = self.iquod1_df.attrs['latitude']
         np_latitude = self.iquod1_dict['latitude']
         header_latitude = self.iquod1_head.latitude
         assert latitude == 34.5883, 'latitude should have been 34.5883, instead read %f' % latitude
@@ -424,7 +424,7 @@ class TestClass():
         '''
 
         latitude_unc = self.iquod1.latitude_unc()
-        df_latitude_unc = self.iquod1_df.meta['latitude_unc']
+        df_latitude_unc = self.iquod1_df.attrs['latitude_unc']
         np_latitude_unc = self.iquod1_dict['latitude_unc']
         header_latitude_unc = self.iquod1_head.latitude_unc
         assert latitude_unc is None, 'latitude error is undefined for this profile, instead read %f' % latitude_unc
@@ -438,7 +438,7 @@ class TestClass():
         '''
 
         longitude = self.iquod1.longitude()
-        df_longitude = self.iquod1_df.meta['longitude']
+        df_longitude = self.iquod1_df.attrs['longitude']
         np_longitude = self.iquod1_dict['longitude']
         header_longitude = self.iquod1_head.longitude
         assert longitude == 134.2433, 'longitude should have been 134.2433, instead read %f' % longitude
@@ -452,7 +452,7 @@ class TestClass():
         '''
 
         longitude_unc = self.iquod1.longitude_unc()
-        df_longitude_unc = self.iquod1_df.meta['longitude_unc']
+        df_longitude_unc = self.iquod1_df.attrs['longitude_unc']
         np_longitude_unc = self.iquod1_dict['longitude_unc']
         header_longitude_unc = self.iquod1_head.longitude_unc
         assert longitude_unc is None, 'longitude error is undefined for this profile, instead read %f' % longitude_unc
@@ -467,7 +467,7 @@ class TestClass():
         '''
 
         uid = self.iquod1.uid()
-        df_uid = self.iquod1_df.meta['uid']
+        df_uid = self.iquod1_df.attrs['uid']
         np_uid = self.iquod1_dict['uid']
         header_uid = self.iquod1_head.uid
         assert uid == 13393621, 'uid should have been 13393621, instead read %f' % uid
@@ -481,7 +481,7 @@ class TestClass():
         '''
 
         levels = self.iquod1.n_levels()
-        df_levels = self.iquod1_df.meta['n_levels']
+        df_levels = self.iquod1_df.attrs['n_levels']
         np_levels = self.iquod1_dict['n_levels']
         header_n_levels = self.iquod1_head.n_levels
         assert levels == 5, 'levels should have been 5, instead read %f' % levels
@@ -495,7 +495,7 @@ class TestClass():
         '''
 
         year = self.iquod1.year()
-        df_year = self.iquod1_df.meta['year']
+        df_year = self.iquod1_df.attrs['year']
         np_year = self.iquod1_dict['year']
         header_year = self.iquod1_head.year
         assert year == 2000, 'year should have been 2000, instead read %f' % year
@@ -509,7 +509,7 @@ class TestClass():
         '''
 
         month = self.iquod1.month() 
-        df_month = self.iquod1_df.meta['month']
+        df_month = self.iquod1_df.attrs['month']
         np_month = self.iquod1_dict['month']
         header_month = self.iquod1_head.month
         assert month == 1, 'month should have been 1, instead read %f' % month
@@ -523,7 +523,7 @@ class TestClass():
         '''
 
         day = self.iquod1.day()
-        df_day = self.iquod1_df.meta['day']
+        df_day = self.iquod1_df.attrs['day']
         np_day = self.iquod1_dict['day']
         header_day = self.iquod1_head.day
         assert day == 4, 'day should have been 4, instead read %f' % day
@@ -537,7 +537,7 @@ class TestClass():
         '''
 
         time = self.iquod1.time()
-        df_time = self.iquod1_df.meta['time']
+        df_time = self.iquod1_df.attrs['time']
         np_time = self.iquod1_dict['time']
         header_time = self.iquod1_head.time
         assert time == 3.7, 'time should have been 3.7, instead read %f' % time
@@ -563,7 +563,7 @@ class TestClass():
         '''
 
         probe = self.iquod1.probe_type() 
-        df_probe = self.iquod1_df.meta['probe_type']
+        df_probe = self.iquod1_df.attrs['probe_type']
         np_probe = self.iquod1_dict['probe_type']
         header_probe = self.iquod1_head.probe_type
         assert probe == 4, 'probe should have been 4, instead read %f' % probe
@@ -660,8 +660,8 @@ class TestClass():
         truth_s = [{'code': 3, 'value': 202.0, 'iMeta': 0}, {'code': 5, 'value': 411.0, 'iMeta': 0}]
         t_meta = self.iquod2.t_metadata()
         s_meta = self.iquod2.s_metadata()
-        df_t_meta = self.iquod2_df.meta['t_metadata']
-        df_s_meta = self.iquod2_df.meta['s_metadata']
+        df_t_meta = self.iquod2_df.attrs['t_metadata']
+        df_s_meta = self.iquod2_df.attrs['s_metadata']
         np_t_meta = self.iquod2_dict['t_metadata']
         np_s_meta = self.iquod2_dict['s_metadata']
 
