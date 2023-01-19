@@ -110,5 +110,20 @@ class WODFile():
     For now, let's assume it will be a plain ASCII type. Later we expand
     for other possibilities
     """
-    def __init__(self, filename: os.PathLike):
+    def __init__(self, filename: str):
         self.fid = open(filename, mode="r")
+        self.file_size = os.fstat(self.fid.fileno()).st_size
+
+
+
+class WODGenerator(WODFile):
+    def __init__(self, filename: str):
+        super().__init__(filename)
+
+    def __iter__(self):
+          return self
+
+    def __next__(self):
+        if self.fid.tell() > self.file_size:
+            raise StopIteration
+        return WodProfile(self.fid)
