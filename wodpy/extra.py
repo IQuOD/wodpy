@@ -1,4 +1,5 @@
 
+import os
 from datetime import datetime
 
 from .wod import WodProfile
@@ -101,3 +102,13 @@ class Wod4CoTeDe(object):
 
     def __getitem__(self, item):
         return self.data[item]
+
+
+class WODFile():
+    """A WOD file object
+
+    For now, let's assume it will be a plain ASCII type. Later we expand
+    for other possibilities
+    """
+    def __init__(self, filename: os.PathLike):
+        self.fid = open(filename, mode="r")
