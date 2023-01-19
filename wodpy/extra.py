@@ -127,3 +127,7 @@ class WODGenerator(WODFile):
         if self.fid.tell() > self.file_size:
             raise StopIteration
         return WodProfile(self.fid)
+
+    def map(self, func, args=None):
+        for p in self:
+            yield func(p)
