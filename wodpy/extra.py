@@ -1,6 +1,15 @@
 
-import os
+import logging
 from datetime import datetime
+
+module_logger = logging.getLogger("wodpy.extra")
+try:
+    from loky import get_reusable_executor
+    LOKY_AVAILABLE = True
+    module_logger.debug("Will use package loky to process in parallel.")
+except:
+    LOKY_AVAILABLE = False
+    module_logger.info("Missing package loky. Falling back to threading.")
 
 from .wod import WodProfile
 from .wodnc import Ragged, ncProfile
@@ -116,7 +125,16 @@ class WODFile():
 
 
 
-class WODGenerator(WODFile):
+
+class ConcurrentMapping():
+    def pmap(self, func, args=None, npes: int=4, timeout:int=2):
+        """Parallel mapping"""
+        executor = get_reusable_executor(max_workers=npes, timeout=timeout)
+        results = executor.map(func, self)
+        yield from results
+
+
+class WODGenerator(ConcurrentMapping, WODFile):
     def __init__(self, filename: str):
         super().__init__(filename)
 
@@ -129,5 +147,6 @@ class WODGenerator(WODFile):
         return WodProfile(self.fid)
 
     def map(self, func, args=None):
+        """(Serial) mapping"""
         for p in self:
             yield func(p)
