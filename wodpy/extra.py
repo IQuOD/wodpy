@@ -124,7 +124,7 @@ class WODGenerator(WODFile):
           return self
 
     def __next__(self):
-        if self.fid.tell() > self.file_size:
+        if self.fid.tell() >= self.file_size:
             raise StopIteration
         return WodProfile(self.fid)
 
