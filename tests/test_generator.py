@@ -18,3 +18,14 @@ def test_map():
     WOD = WODGenerator("tests/testData/classic.dat")
     uids = [p for p in WOD.map(lambda x: x.uid())]
     assert uids == [67064, 15556443]
+
+
+def test_pmap():
+    try:
+        import loky
+    except:
+        # No fallback alternative for loky at this point
+        return
+    WOD = WODGenerator("tests/testData/classic.dat")
+    uids = [p for p in WOD.pmap(lambda x: x.uid())]
+    assert uids == [67064, 15556443]
