@@ -56,7 +56,7 @@ def test_latitude(classic1):
     assert latitude == 61.930, 'latitude should have been 61.930, instead read %f' % latitude
     assert df_latitude == 61.930, 'dataframe latitude should have been 61.930, instead read %f' % df_latitude
     assert np_latitude == 61.930, 'np dict latitude should have been 61.930, instead read %f' % np_latitude
-    assert header_latitude == 61.931, 'header latitude should have been 61.930, instead read %f' % header_latitude
+    assert header_latitude == 61.930, 'header latitude should have been 61.930, instead read %f' % header_latitude
 
 def test_latitude_error(classic1):
     '''
