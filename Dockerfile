@@ -1,5 +1,5 @@
-FROM iquod/wodpy:test-base-220904
+FROM iquod/wodpy:test-base-230716
 
 WORKDIR /wodpy
 COPY . .
-CMD nosetests tests/*.py
+CMD pytest
