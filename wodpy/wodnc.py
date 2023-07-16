@@ -44,6 +44,9 @@ class Ragged():
     def variables(self):
         return self.rootgrp.variables
 
+    def dimensions(self):
+        return self.rootgrp.dimensions
+
     def attributes(self):
         return self.rootgrp.ncattrs()
 
@@ -124,15 +127,9 @@ class ncProfile():
         returns true if data_key looks like per level data
         '''
 
-        if data_key in self.r.variables():
-            try:
-                if len(self.r.variables()[data_key]) != self.r.ncasts():
-                    return True
-                else:
-                    return False
-            except:
-                logging.warning(data_key + ' neither profile metadata nor level data.')
-                return False
+        if data_key + '_obs' in self.r.dimensions():
+            # per level data should have a *_obs dimension 
+            return True
         else:
             logging.warning(data_key + ' not found in this dataset.')
             return False                    
