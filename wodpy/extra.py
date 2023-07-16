@@ -1,5 +1,4 @@
-
-import logging
+import logging, os
 from datetime import datetime
 
 module_logger = logging.getLogger("wodpy.extra")
