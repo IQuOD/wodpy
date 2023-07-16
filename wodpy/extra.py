@@ -1,5 +1,14 @@
-
+import logging, os
 from datetime import datetime
+
+module_logger = logging.getLogger("wodpy.extra")
+try:
+    from loky import get_reusable_executor
+    LOKY_AVAILABLE = True
+    module_logger.debug("Will use package loky to process in parallel.")
+except:
+    LOKY_AVAILABLE = False
+    module_logger.info("Missing package loky. Falling back to threading.")
 
 from .wod import WodProfile
 from .wodnc import Ragged, ncProfile
@@ -101,3 +110,42 @@ class Wod4CoTeDe(object):
 
     def __getitem__(self, item):
         return self.data[item]
+
+
+class WODFile():
+    """A WOD file object
+
+    For now, let's assume it will be a plain ASCII type. Later we expand
+    for other possibilities
+    """
+    def __init__(self, filename: str):
+        self.fid = open(filename, mode="r")
+        self.file_size = os.fstat(self.fid.fileno()).st_size
+
+
+
+
+class ConcurrentMapping():
+    def pmap(self, func, args=None, npes: int=4, timeout:int=2):
+        """Parallel mapping"""
+        executor = get_reusable_executor(max_workers=npes, timeout=timeout)
+        results = executor.map(func, self)
+        yield from results
+
+
+class WODGenerator(ConcurrentMapping, WODFile):
+    def __init__(self, filename: str):
+        super().__init__(filename)
+
+    def __iter__(self):
+          return self
+
+    def __next__(self):
+        if self.fid.tell() >= self.file_size:
+            raise StopIteration
+        return WodProfile(self.fid)
+
+    def map(self, func, args=None):
+        """(Serial) mapping"""
+        for p in self:
+            yield func(p)
