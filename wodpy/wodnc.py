@@ -36,7 +36,12 @@ class Ragged():
         '''
         filename: name of netcdf file containing wod profiles
         '''
-        self.rootgrp = Dataset(filename, "r", format="NETCDF4")
+        if isinstance(filename, str):
+            self.rootgrp = Dataset(filename, "r", format="NETCDF4")
+        else:
+            # if this is a file object from s3 bucket
+            nc_bytes = filename.read()
+            self.rootgrp = Dataset(f'inmemory.nc', 'r', format='NETCDF4', memory=nc_bytes)
 
     def ncasts(self):
         return self.rootgrp.dimensions['casts'].size
@@ -97,6 +102,8 @@ class ncProfile():
         '''
         returns (offset, nentries) for variable v to extract it for this profile from the raggedarray.
         '''
+        # trim variable v to ust include the variable name left of any underscore:
+        v = v.split('_')[0]
         offset = self.determine_offset(v+'_row_size')
         nentries = self.metadata(v+'_row_size')
         return offset, nentries
@@ -127,11 +134,16 @@ class ncProfile():
         returns true if data_key looks like per level data
         '''
 
-        if data_key + '_obs' in self.r.dimensions():
+        if data_key not in self.r.rootgrp.variables.keys():
+            return False
+        if len(self.r.rootgrp.variables[data_key].dimensions) == 0:
+            logging.warning(data_key + ' not level data.')
+            return False
+        if '_obs' in self.r.rootgrp.variables[data_key].dimensions[0]:
             # per level data should have a *_obs dimension 
             return True
         else:
-            logging.warning(data_key + ' not found in this dataset.')
+            logging.warning(data_key + ' not level data.')
             return False                    
 
     def show_profile_metadata(self):
