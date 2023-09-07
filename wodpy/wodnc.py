@@ -104,8 +104,8 @@ class ncProfile():
         '''
         # trim variable v to ust include the variable name left of any underscore:
         v = v.split('_')[0]
-        offset = self.determine_offset(v+'_row_size')
-        nentries = self.metadata(v+'_row_size')
+        offset = int(self.determine_offset(v+'_row_size'))
+        nentries = int(self.metadata(v+'_row_size'))
         return offset, nentries
 
     def is_metadata(self, metadata_key):
