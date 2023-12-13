@@ -137,13 +137,13 @@ class ncProfile():
         if data_key not in self.r.rootgrp.variables.keys():
             return False
         if len(self.r.rootgrp.variables[data_key].dimensions) == 0:
-            logging.warning(data_key + ' not level data.')
+            # logging.warning(data_key + ' is not level data and of zero size.')
             return False
         if '_obs' in self.r.rootgrp.variables[data_key].dimensions[0]:
             # per level data should have a *_obs dimension 
             return True
         else:
-            logging.warning(data_key + ' not level data.')
+            # logging.warning(data_key + ' is not level data.')
             return False                    
 
     def show_profile_metadata(self):
