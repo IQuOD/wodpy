@@ -36,12 +36,8 @@ class Ragged():
         '''
         filename: name of netcdf file containing wod profiles
         '''
-        if isinstance(filename, str):
-            self.rootgrp = Dataset(filename, "r", format="NETCDF4")
-        else:
-            # if this is a file object from s3 bucket
-            nc_bytes = filename.read()
-            self.rootgrp = Dataset(f'inmemory.nc', 'r', format='NETCDF4', memory=nc_bytes)
+
+        self.rootgrp = Dataset(filename, "r", format="NETCDF4")
 
     def ncasts(self):
         return self.rootgrp.dimensions['casts'].size
