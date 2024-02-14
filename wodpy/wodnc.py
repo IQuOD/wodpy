@@ -36,6 +36,7 @@ class Ragged():
         '''
         filename: name of netcdf file containing wod profiles
         '''
+
         self.rootgrp = Dataset(filename, "r", format="NETCDF4")
 
     def ncasts(self):
@@ -97,8 +98,10 @@ class ncProfile():
         '''
         returns (offset, nentries) for variable v to extract it for this profile from the raggedarray.
         '''
-        offset = self.determine_offset(v+'_row_size')
-        nentries = self.metadata(v+'_row_size')
+        # trim variable v to ust include the variable name left of any underscore:
+        v = v.split('_')[0]
+        offset = int(self.determine_offset(v+'_row_size'))
+        nentries = int(self.metadata(v+'_row_size'))
         return offset, nentries
 
     def is_metadata(self, metadata_key):
@@ -127,11 +130,16 @@ class ncProfile():
         returns true if data_key looks like per level data
         '''
 
-        if data_key + '_obs' in self.r.dimensions():
+        if data_key not in self.r.rootgrp.variables.keys():
+            return False
+        if len(self.r.rootgrp.variables[data_key].dimensions) == 0:
+            # logging.warning(data_key + ' is not level data and of zero size.')
+            return False
+        if '_obs' in self.r.rootgrp.variables[data_key].dimensions[0]:
             # per level data should have a *_obs dimension 
             return True
         else:
-            logging.warning(data_key + ' not found in this dataset.')
+            # logging.warning(data_key + ' is not level data.')
             return False                    
 
     def show_profile_metadata(self):

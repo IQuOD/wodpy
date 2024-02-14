@@ -23,7 +23,7 @@ def test_longitude(classic1):
     '''
 
     longitude = classic1.longitude()
-    assert round(longitude, 2) == -172.270, 'longitude should have been approx -172.270, instead read %f' % latitude
+    assert round(longitude, 2) == -172.270, 'longitude should have been approx -172.270, instead read %f' % longitude
 
 def test_uid(classic1):
     '''
@@ -109,6 +109,34 @@ def test_temperature(classic1):
     truth = [numpy.float32(t) for t in truth]
     t = classic1.t()
     assert numpy.array_equal(t, truth), 'temperatures should have been [8.96, 8.95, 0.9, -1.23], instead read %s' % t.__str__()
+
+def test_temperature_WODflags(classic1):
+    '''
+    check WOD flags are not returned = [--, --, --, --]
+    '''
+
+    qc = classic1.t_level_qc('WOD')
+    assert numpy.alltrue(qc.mask) , \
+        'temperature_WODflags should not be in file, instead read %s' % qc.__str__()
+
+
+def test_temperature_IQUODflags(classic1):
+    '''
+    check IQUOD flags are returned = [0, 0, 0, 0]
+    '''
+
+    errors = []
+    truth = [0, 0, 0, 0]
+    qc = classic1.t_level_qc('IQUOD')
+    # replace assertions by conditions
+    if numpy.alltrue(qc.mask):
+        errors.append("Temperature_IQUODflags not found in file")
+    if not numpy.array_equal(qc, truth):
+        errors.append('Temperature_IQUODflags should have been [0, 0, 0, 0], instead read %s' % qc.__str__())
+
+    # assert no error message has been registered, else print messages
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
+
 
 def test_salinity(classic1):
     '''
