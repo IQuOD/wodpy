@@ -71,6 +71,18 @@ profile2 = wod.WodProfile(fid) # Read the next profile.
 profile2.is_last_profile_in_file(fid) # Is this the last profile?
 ```
 
+Or to load all profiles in a file:
+```
+from wodpy import wod
+profiles = []
+
+# load all profiles
+with open('example.dat','r') as fid:
+    profiles.append(wod.WodProfile(fid))
+    while not profiles[-1].is_last_profile_in_file(fid):
+        profiles.append(wod.WodProfile(fid))
+```
+
 Complete method lists and definitions are below.
 
 #### IQuOD netCDF data
